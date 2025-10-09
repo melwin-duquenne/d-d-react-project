@@ -1,7 +1,9 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { Slate, Editable, withReact } from "slate-react";
-import { createEditor, Editor, Transforms, Descendant, BaseEditor } from "slate";
+import { createEditor, Transforms } from "slate";
+
+import { Descendant, Text } from "slate";
 
 const initialValue: Descendant[] = [
   {
@@ -9,11 +11,10 @@ const initialValue: Descendant[] = [
     children: [{ text: "Écris ton texte ici..." }],
   },
 ];
-
 export default function SlateEditor() {
   const editor = useMemo(() => withReact(createEditor()), []);
   const [value, setValue] = useState<Descendant[]>(initialValue);
-
+  console.log(value);
   // Format toggle helpers
   const toggleFormat = (format: "bold" | "italic") => {
     Transforms.setNodes(
@@ -25,7 +26,7 @@ export default function SlateEditor() {
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-4 border border-amber-300 max-w-2xl mx-auto">
-      <Slate editor={editor} initialValue={initialValue} onChange={setValue}>
+  <Slate editor={editor} initialValue={initialValue} onChange={setValue}>
         <Editable
           className="min-h-[200px] p-2 outline-none text-black"
           renderLeaf={props => <Leaf {...props} />}
@@ -58,9 +59,6 @@ export default function SlateEditor() {
     </div>
   );
 }
-
-// Utilitaire pour le typage
-import { Text } from "slate";
 
 // Custom leaf renderer for bold/italic
 function Leaf({ attributes, children, leaf }: { attributes: Record<string, unknown>; children: React.ReactNode; leaf: Text }) {
