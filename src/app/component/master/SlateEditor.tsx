@@ -25,14 +25,8 @@ export default function SlateEditor() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-4 border border-amber-300 max-w-2xl mx-auto">
-  <Slate editor={editor} initialValue={initialValue} onChange={setValue}>
-        <Editable
-          className="min-h-[200px] p-2 outline-none text-black"
-          renderLeaf={props => <Leaf {...props} />}
-          placeholder="Écris ton texte ici..."
-        />
-        {/* Toolbar simple */}
+    <div className="bg-white opacity-80 overflow-auto rounded-xl shadow-lg p-4 border border-amber-300 w-full h-full mx-auto">
+  <Slate editor={editor} initialValue={initialValue} onChange={val => setValue(val.length === 0 ? initialValue : val)}>
         <div className="flex gap-2 mt-2">
           <button
             type="button"
@@ -55,6 +49,13 @@ export default function SlateEditor() {
             Italique
           </button>
         </div>
+        <Editable
+          className="h-auto p-2 outline-none text-black"
+          renderLeaf={props => <Leaf {...props} />}
+          placeholder="Écris ton texte ici..."
+        />
+        {/* Toolbar simple */}
+        
       </Slate>
     </div>
   );
