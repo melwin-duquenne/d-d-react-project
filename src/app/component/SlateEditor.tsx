@@ -63,7 +63,7 @@ export default function SlateEditor() {
 import { Text } from "slate";
 
 // Custom leaf renderer for bold/italic
-function Leaf({ attributes, children, leaf }: { attributes: Record<string, unknown>; children: React.ReactNode; leaf: any }) {
+function Leaf({ attributes, children, leaf }: { attributes: Record<string, unknown>; children: React.ReactNode; leaf: Text }) {
   if (leaf.bold) {
     children = <strong>{children}</strong>;
   }
