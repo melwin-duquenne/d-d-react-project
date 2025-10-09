@@ -12,7 +12,9 @@
     "axios": "^1.12.2",
     "next": "15.5.4",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "slate": "^0.118.1",
+    "slate-react": "^0.117.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

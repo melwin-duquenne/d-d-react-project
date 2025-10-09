@@ -19,6 +19,9 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    "rules": {
+      "import/no-unresolved": [2, { "ignore": ["\\.css$"] }]
+    }
   },
 ];
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Nav() {
   return (
@@ -12,7 +13,7 @@ export default function Nav() {
       />
       <h1 className="text-2xl font-bold font-serif">La Taverne du Héros</h1>
       </div>
-      <button className="bg-black text-white p-2 rounded">Se connecter</button>
+      <Link href="/login" className="bg-black text-white p-2 rounded">Se connecter</Link>
     </nav>
   );
 }
