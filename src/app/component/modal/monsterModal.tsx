@@ -15,7 +15,7 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
   }, [index]);
 
   return (
-    <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50">
+    <div className=" absolute inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50">
       <div className="bg-[url('/book.png')] bg-center bg-cover rounded-xl shadow-lg p-8 max-w-11/12 w-full relative ">
 
         <button className="absolute top-2 right-12 text-amber-700 text-2xl" onClick={onClose}>&times;</button>
@@ -44,7 +44,7 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
                     <div className="mb-2">Taille : {monster.size}</div>
                     <div className="mb-2">Alignement : {monster.alignment}</div>
                     <div className="mb-2">Langues : {monster.languages}</div>
-                    <div className="mb-2">Classe d'armure : {
+                    <div className="mb-2">Classe d{'\''}armure : {
                       Array.isArray(monster.armor_class)
                         ? monster.armor_class.map((ac, i) => (
                             <span key={i}>{ac.type} ({ac.value}){i < (monster.armor_class as {type:string;value:number}[]).length - 1 ? ', ' : ''}</span>
