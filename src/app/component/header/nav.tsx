@@ -6,7 +6,7 @@ export default function Nav() {
     <nav className="bg-[#f7f2c6] text-black p-4 w-full flex items-center justify-between">
       <div className="flex items-center">
       <Image
-        src="/logo.png"
+        src="/logo.webp"
         alt="Logo"
         width={100}
         height={100}

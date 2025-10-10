@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Nav />
-        <div className="bg-[url('/font.jpg')] bg-center bg-cover">
+        <div className="bg-[url('/font.webp')] bg-center bg-cover">
           {children}
         </div>
       </body>

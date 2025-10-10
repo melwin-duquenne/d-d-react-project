@@ -11,7 +11,7 @@ export default function AuthCard() {
       <div className="w-1/2 flex items-center justify-center bg-amber-100">
         <div className="relative overflow-hidden shadow-lg ">
           <Image
-            src="/login.jpg"
+            src="/login.webp"
             alt="Login illustration"
             width={400}
             height={384}
@@ -20,7 +20,7 @@ export default function AuthCard() {
           />
           <Link href={"/"}>
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt="Logo"
             width={50}
             height={50}

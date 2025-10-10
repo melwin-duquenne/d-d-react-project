@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <div className="flex w-full  items-center justify-center text-amber-800">
-     <div className="flex flex-col items-center z-10 max-w-[60%] mt-8 bg-[url('/parchemin.png')] bg-top bg-cover bg-center rounded-2xl p-10 text-center animate-scroll-fade">
+     <div className="flex flex-col items-center z-10 max-w-[60%] mt-8 bg-[url('/parchemin.webp')] bg-top bg-cover bg-center rounded-2xl p-10 text-center animate-scroll-fade">
         <h1 className="text-5xl font-bold  drop-shadow-lg font-serif mt-50 mb-4">
           La Taverne du Héros
         </h1>

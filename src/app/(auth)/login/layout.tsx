@@ -29,7 +29,7 @@ export default function LoginLayout({
               <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
               >
-                <div className="bg-[url('/font.jpg')] bg-center bg-cover">
+                <div className="bg-[url('/font.webp')] bg-center bg-cover">
                   {children}
                 </div>
               </body>
