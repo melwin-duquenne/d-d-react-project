@@ -22,8 +22,9 @@ export default function ListMonster() {
     );
 
     return (
-        <div className="p-4 bg-white opacity-80 text-black">
-            <div className="overflow-y-auto max-h-[250px] w-1/2">
+        <div className="text-black">
+        <div className="p-4 bg-white opacity-80 ">
+            <div className="w-1/2">
                 <input
                     type="text"
                     placeholder="Rechercher un monstre..."
@@ -31,6 +32,7 @@ export default function ListMonster() {
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                 />
+                <div className="max-h-[250px] overflow-y-auto">
                 {loading ? (
                     <div>Chargement...</div>
                 ) : (
@@ -46,8 +48,10 @@ export default function ListMonster() {
                         ))}
                     </ul>
                 )}
+                </div>
             </div>
-            {selectedIndex && (
+        </div>
+        {selectedIndex && (
                 <MonsterModal index={selectedIndex} onClose={() => setSelectedIndex(null)} />
             )}
         </div>

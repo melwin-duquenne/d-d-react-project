@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
 @import "tailwindcss";
 
 :root {
@@ -30,6 +32,10 @@ body {
 
 .font-serif {
   font-family: 'Uncial Antiqua', serif;
+}
+
+.font-script {
+  font-family: 'MedievalSharp', cursive;
 }
 
 @keyframes fade-in {
