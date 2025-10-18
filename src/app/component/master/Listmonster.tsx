@@ -68,12 +68,18 @@ export default function ListMonster() {
                         <MonsterModal index={selectedIndex} onClose={() => setSelectedIndex(null)} />
                     )}
                     {showPlayerCard && (
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                            <div className="bg-white rounded-xl shadow-lg p-8 w-1/2">
-                                <div className="flex justify-end w-full">
-                                    <button className="text-amber-700 text-2xl" onClick={() => setShowPlayerCard(false)}>&times;</button>
-                                </div>
-                                <div>
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-50 overflow-auto">
+                            {/* Croix de fermeture flottante */}
+                            <button
+                                className="absolute top-2 right-8 text-amber-700 text-3xl w-12 h-12 flex items-center justify-center rounded-full bg-white shadow hover:bg-amber-100 hover:scale-110 transition-all border border-amber-300 z-50"
+                                style={{ lineHeight: 1 }}
+                                aria-label="Fermer la fiche joueur"
+                                onClick={() => setShowPlayerCard(false)}
+                            >
+                                &times;
+                            </button>
+                                <div className="bg-[url('/playerPaper.webp')] bg-cover bg-center p-12 w-5/6 w-full mt-[500px] relative">
+                                <div className="flex justify-center">
                                     <PlayerCard />
                                 </div>
                             </div>

@@ -15,16 +15,16 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
   }, [index]);
 
   return (
-    <div className=" absolute inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black flex items-center justify-center h-[calc(100vh+100px)] z-50 ">
       <div className="bg-[url('/book.webp')] bg-center bg-cover rounded-xl shadow-lg p-8 max-w-11/12 w-full relative ">
 
-        <button className="absolute top-2 right-12 text-amber-700 text-2xl" onClick={onClose}>&times;</button>
+        <button className="absolute top-8 right-12 text-amber-700 text-2xl" onClick={onClose}>&times;</button>
         {loading ? (
           <div>Chargement...</div>
         ) : error ? (
           <div className="text-red-500">{error}</div>
         ) : monster ? (
-          <div className="text-md px-20">            
+          <div className="text-md xl:px-20">
             <div className="text-2xl ml-6 font-bold mb-4 text-amber-800 font-serif">{monster.name}</div>
             <div className="mb-2 ml-6 text-xl">Niveau de difficulté : {monster.challenge_rating}</div>
             <div className="flex justify-between items-center w-full">
@@ -34,7 +34,7 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
                   alt={monster.name}
                   width={500}
                   height={500}
-                  className="mb-4 ml-20 h-[500px]"
+                  className="mb-4 ml-0 h-[500px] 2xl:ml-20"
                 />
               )}
               <div className=" grid gap-2 max-w-5/12 font-script">

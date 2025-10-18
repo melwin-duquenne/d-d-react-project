@@ -1,9 +1,30 @@
+import { useEffect, useState } from "react";
+import SelectInput from "../../form/input/selectInput";
+import { fetchAllRaces } from "@/fetch/MonsterFetch";
+
 export default function RaceSelect() {
+  const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
+
+  useEffect(() => {
+    async function loadRaces() {
+      try {
+        const races = await fetchAllRaces();
+        setOptions(
+          races.map((race: { name: string; index: string }) => ({
+            label: race.name,
+            value: race.index,
+          }))
+        );
+      } catch (e) {
+        setOptions([]);
+      }
+    }
+    loadRaces();
+  }, []);
+
   return (
-    <div className="bg-gray-50 rounded p-4">
-      <h3 className="font-bold mb-2">Race</h3>
-      {/* Sélection API à implémenter */}
-      <div>À compléter</div>
+    <div className="rounded p-4">
+      <SelectInput label="Races" name="race" options={options} />
     </div>
   );
 }

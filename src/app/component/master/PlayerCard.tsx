@@ -12,27 +12,28 @@ import SpellListSelect from "./player/SpellListSelect";
 
 export default function PlayerCard() {
 	return (
-		<div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl w-full mx-auto">
+		<div className="text-sm p-15 w-11/12 font-serif">
 			<h2 className="text-2xl font-bold mb-4 text-amber-800">Fiche Joueur</h2>
 			<div className="grid gap-6">
-                <div className="flex w-full">
+                <div className="flex w-full justify-between">
                     <NameText />
                 	<RaceSelect />
                 </div>
-                <div className="flex w-full">
+                <div className="flex w-full justify-between">
                     <ClassSelect />
-                    <LevelProgress />
                     <LanguageSelect />
+                    <LevelProgress />
                 </div>
-                <div className="flex w-full">
+                <div className="flex w-full justify-between">
                 <AbilityScore />
                 <SkillSelect />
                 </div>
                 <SpellListSelect />
 				<EquipmentList />
 				<HistoryEditor />
-				
-				
+				<div className="flex w-full justify-end">
+                    <button className="bg-blue-500 text-white rounded px-4 py-2">Enregistrer</button>
+                </div>
 			</div>
 		</div>
 	);

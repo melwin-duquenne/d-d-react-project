@@ -7,7 +7,7 @@ export default function MasterPage() {
       <div className="w-1/2 h-screen">
       <SlateEditor />
       </div>
-      <div className="w-1/2 h-screen">
+      <div className="w-1/2 min-h-screen">
         <ListMonster />
       </div>
     </div>
