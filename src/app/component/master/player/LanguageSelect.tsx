@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import SelectInput from "../../form/input/selectInput";
 import { fetchAllLanguages } from "@/fetch/MonsterFetch";
 
-export default function LanguageSelect() {
+interface LanguageSelectProps {
+  value: string[];
+  onChange: (value: string[]) => void;
+}
+
+export default function LanguageSelect({ value, onChange }: LanguageSelectProps) {
   const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
 
   useEffect(() => {
@@ -22,9 +27,22 @@ export default function LanguageSelect() {
     loadLanguages();
   }, []);
 
+  // Pour le select multiple, value doit être un tableau de string
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = Array.from(e.target.selectedOptions, opt => opt.value);
+    onChange(selected);
+  };
+
   return (
     <div className="rounded p-4">
-      <SelectInput label="Langues" name="languages" options={options} multiple />
+      <SelectInput
+        label="Langues"
+        name="languages"
+        options={options}
+        multiple
+        value={value}
+        onChange={handleChange}
+      />
     </div>
   );
 }

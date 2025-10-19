@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import SelectInput from "../../form/input/selectInput";
 import { fetchAllRaces } from "@/fetch/MonsterFetch";
 
-export default function RaceSelect() {
+interface RaceSelectProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export default function RaceSelect({ value, onChange }: RaceSelectProps) {
   const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
 
   useEffect(() => {
@@ -24,7 +29,13 @@ export default function RaceSelect() {
 
   return (
     <div className="rounded p-4">
-      <SelectInput label="Races" name="race" options={options} />
+      <SelectInput
+        label="Races"
+        name="race"
+        options={options}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+      />
     </div>
   );
 }

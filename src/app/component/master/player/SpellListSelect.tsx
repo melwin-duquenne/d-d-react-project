@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import SelectInput from "../../form/input/selectInput";
 import { fetchAllSpells } from "@/fetch/MonsterFetch";
 
-export default function SpellListSelect() {
+interface SpellListSelectProps {
+  value: string[];
+  onChange: (spells: string[]) => void;
+}
+
+export default function SpellListSelect({ value, onChange }: SpellListSelectProps) {
   const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
 
   useEffect(() => {
@@ -22,9 +27,21 @@ export default function SpellListSelect() {
     loadSpells();
   }, []);
 
+  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const selected = Array.from(e.target.selectedOptions, opt => opt.value);
+    onChange(selected);
+  }
+
   return (
     <div className="rounded p-4">
-      <SelectInput label="Sorts" name="spells" options={options} multiple />
+      <SelectInput
+        label="Sorts"
+        name="spells"
+        options={options}
+        multiple
+        value={value}
+        onChange={handleChange}
+      />
     </div>
   );
 }
