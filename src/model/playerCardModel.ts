@@ -1,3 +1,9 @@
+// Récupérer toutes les fiches joueurs
+export async function getAllPlayerCards() {
+  const client = await clientPromise;
+  const db = client.db(DB_NAME);
+  return db.collection(COLLECTION).find({}).toArray();
+}
 import clientPromise from "../lib/db/mongodb";
 import { PlayerCardData } from "./playerCardTemplate";
 

@@ -3,7 +3,8 @@ import {
   createPlayerCard,
   getPlayerCardByName,
   updatePlayerCard,
-  deletePlayerCard
+  deletePlayerCard,
+  getAllPlayerCards
 } from '../../model/playerCardModel';
 import { PlayerCardData } from '../../model/playerCardTemplate';
 
@@ -18,6 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (method === 'GET') {
+    // Récupérer toutes les fiches joueurs si all=true
+    if (req.query.all === 'true') {
+      const players = await getAllPlayerCards();
+      return res.status(200).json(players);
+    }
     // Récupérer une fiche joueur par nom
     const { name } = req.query;
     if (!name || typeof name !== 'string') {

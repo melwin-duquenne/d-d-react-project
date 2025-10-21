@@ -4,6 +4,7 @@ import { fetchAllMonsters } from "@/fetch/MonsterFetch";
 import MonsterModal from "@/app/component/modal/monsterModal";
 import { Monsters } from "@/model/monster";
 import PlayerCard from "./PlayerCard";
+import ListPlayerCard from "./player/ListPlayerCard";
 export default function ListMonster() {
 
     const [monsters, setMonsters] = useState<Monsters>([]);
@@ -25,7 +26,7 @@ export default function ListMonster() {
 
     return (
                 <div className="text-black">
-                    <div className="p-4 bg-white opacity-80 ">
+                    <div className="p-4 bg-white  flex ">
                         <div className="w-1/2">
                             <input
                                 type="text"
@@ -59,8 +60,8 @@ export default function ListMonster() {
                                 Afficher la fiche joueur
                             </button>
                         </div>
-                        <div>
-                            <div></div>
+                        <div className="w-full">
+                            <div className="w-full"> <ListPlayerCard /></div>
                             <div></div>
                         </div>
                     </div>
