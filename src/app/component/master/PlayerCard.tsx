@@ -13,61 +13,52 @@ import SkillSelect from "./player/SkillSelect";
 import SpellListSelect from "./player/SpellListSelect";
 
 
-export default function PlayerCard() {
+import { PlayerCardData } from "@/model/playerCardTemplate";
+
+interface PlayerCardProps {
+  initialData?: PlayerCardData;
+  onClose?: () => void;
+}
+
+export default function PlayerCard({ initialData, onClose }: PlayerCardProps) {
     // State centralisé pour la fiche joueur (exemple minimal)
-    const [player, setPlayer] = useState<{
-        name: string;
-        race: string;
-        class: string;
-        level: number;
-        xp: number;
-        abilityScores: {
-            strength: number;
-            dexterity: number;
-            constitution: number;
-            intelligence: number;
-            wisdom: number;
-            charisma: number;
-        };
-        languages: string[];
-        skills: string[];
-        spells: string[];
-        equipment: string[];
-        magicItems: string[];
-        history: string;
-    }>({
-        name: "",
-        race: "",
-        class: "",
-        level: 1,
-        xp: 0,
-        abilityScores: {
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            intelligence: 10,
-            wisdom: 10,
-            charisma: 10,
-        },
-        languages: [],
-        skills: [],
-        spells: [],
-        equipment: [],
-        magicItems: [],
-        history: "",
-    });
+    const [player, setPlayer] = useState<PlayerCardData>(
+        initialData ?? {
+            name: "",
+            race: "",
+            class: "",
+            level: 1,
+            xp: 0,
+            abilityScores: {
+                strength: 10,
+                dexterity: 10,
+                constitution: 10,
+                intelligence: 10,
+                wisdom: 10,
+                charisma: 10,
+            },
+            languages: [],
+            skills: [],
+            spells: [],
+            equipment: [],
+            magicItems: [],
+            history: "",
+        }
+    );
 
     // TODO: Passer des setters aux sous-composants pour mettre à jour le state
 
     const handleSave = async () => {
         try {
+            const method = initialData ? "PUT" : "POST";
             const res = await fetch("/api/playerCard", {
-                method: "POST",
+                method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(player),
             });
             if (!res.ok) throw new Error("Erreur lors de l'enregistrement");
             alert("Fiche joueur enregistrée !");
+            if (onClose) onClose();
         } catch (e) {
             alert("Erreur lors de l'enregistrement");
         }
@@ -77,7 +68,6 @@ export default function PlayerCard() {
         <div className="text-sm p-15 w-11/12 font-serif">
             <h2 className="text-2xl font-bold mb-4 text-amber-800">Fiche Joueur</h2>
             <div className="grid gap-6">
-                {/* TODO: Passer les setters aux sous-composants pour remplir le state */}
                 <div className="flex w-full justify-between">
                     <NameText
                         value={player.name}
@@ -127,7 +117,12 @@ export default function PlayerCard() {
                     value={player.history}
                     onChange={history => setPlayer({ ...player, history })}
                 />
-                <div className="flex w-full justify-end">
+                <div className="flex w-full justify-end gap-2">
+                    {onClose && (
+                        <button className="bg-gray-400 text-white rounded px-4 py-2" onClick={onClose}>
+                            Annuler
+                        </button>
+                    )}
                     <button className="bg-blue-500 text-white rounded px-4 py-2" onClick={handleSave}>
                         Enregistrer
                     </button>

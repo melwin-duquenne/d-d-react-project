@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { PlayerCardData } from "@/model/playerCardTemplate";
 import { levelThresholds } from "../../../../utils/player/levelThresholds";
+import PlayerCard from "../PlayerCard";
 
 
 
@@ -11,8 +12,10 @@ interface PlayerCardViewProps {
 }
 
 export default function PlayerCardView({ name, onClose }: PlayerCardViewProps) {
+
   const [player, setPlayer] = useState<PlayerCardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false);
  
   useEffect(() => {
     setLoading(true);
@@ -38,10 +41,23 @@ export default function PlayerCardView({ name, onClose }: PlayerCardViewProps) {
   const currentLevelXp = levelThresholds[level - 1];
   const progress = Math.min(1, (xp - currentLevelXp) / (nextLevelXp - currentLevelXp));
 
+  if (editMode) {
+    // Affiche le formulaire PlayerCard pré-rempli pour édition
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black z-50 overflow-auto">
+        <div className="bg-[url('/playerPaper.webp')] bg-center bg-cover p-20 mt-[800px] w-full max-w-4xl relative">
+          <button onClick={() => setEditMode(false)} className="absolute top-30 right-14 text-2xl text-gray-500 hover:text-red-500">&times;</button>
+          <PlayerCard initialData={player} onClose={onClose} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
-      <div className="bg-[url('/playerPaper.webp')] bg-center p-8 w-full max-w-3xl relative">
-        <button onClick={onClose} className="absolute top-2 right-2 text-2xl text-gray-500 hover:text-red-500">&times;</button>
+      <div className="bg-[url('/playerPaper.webp')] bg-center bg-cover p-20 w-full min-h-[800px] max-w-4xl relative">
+        <button onClick={onClose} className="absolute top-2 right-14 text-2xl text-gray-500 hover:text-red-500">&times;</button>
+        <button onClick={() => setEditMode(true)} className="absolute top-2 left-18 text-lg cursor-pointer text-black px-4 py-3 rounded-full shadow">&#9998;</button>
         <h2 className="text-2xl font-bold mb-4 text-amber-800">{player.name}</h2>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div><b>Race:</b> {player.race}</div>
