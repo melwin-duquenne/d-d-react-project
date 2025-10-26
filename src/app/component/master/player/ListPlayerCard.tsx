@@ -7,15 +7,29 @@ interface PlayerCardListItem {
   name: string;
 }
 
-export default function ListPlayerCard() {
+interface ListPlayerCardProps {
+  partyId: string;
+  isOwner: boolean;
+}
+
+interface PlayerCardListItem {
+  _id: string;
+  name: string;
+  partyId?: string;
+}
+
+export default function ListPlayerCard({ partyId, isOwner }: ListPlayerCardProps) {
   const [players, setPlayers] = useState<PlayerCardListItem[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/playerCard?all=true")
       .then(res => res.json())
-      .then(data => setPlayers(data));
-  }, []);
+      .then(data => {
+        // Filtrer les joueurs par partyId
+        setPlayers(data.filter((p: PlayerCardListItem) => p.partyId === partyId));
+      });
+  }, [partyId]);
 
   return (
     <>
@@ -32,7 +46,7 @@ export default function ListPlayerCard() {
         ))}
       </div>
       {selected && (
-        <PlayerCardView name={selected} onClose={() => setSelected(null)} />
+        <PlayerCardView name={selected} onClose={() => setSelected(null)} isOwner={isOwner} />
       )}
     </>
   );

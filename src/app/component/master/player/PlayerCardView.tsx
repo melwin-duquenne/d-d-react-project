@@ -9,9 +9,10 @@ import PlayerCard from "../PlayerCard";
 interface PlayerCardViewProps {
   name: string;
   onClose: () => void;
+  isOwner?: boolean;
 }
 
-export default function PlayerCardView({ name, onClose }: PlayerCardViewProps) {
+export default function PlayerCardView({ name, onClose, isOwner }: PlayerCardViewProps) {
 
   const [player, setPlayer] = useState<PlayerCardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,7 +58,9 @@ export default function PlayerCardView({ name, onClose }: PlayerCardViewProps) {
     <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
       <div className="bg-[url('/playerPaper.webp')] bg-center bg-cover p-20 w-full min-h-[800px] max-w-4xl relative">
         <button onClick={onClose} className="absolute top-2 right-14 text-2xl text-gray-500 hover:text-red-500">&times;</button>
-        <button onClick={() => setEditMode(true)} className="absolute top-2 left-18 text-lg cursor-pointer text-black px-4 py-3 rounded-full shadow">&#9998;</button>
+        {isOwner && (
+          <button onClick={() => setEditMode(true)} className="absolute top-2 left-18 text-lg cursor-pointer text-black px-4 py-3 rounded-full shadow">&#9998;</button>
+        )}
         <h2 className="text-2xl font-bold mb-4 text-amber-800">{player.name}</h2>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div><b>Race:</b> {player.race}</div>

@@ -16,11 +16,12 @@ import SpellListSelect from "./player/SpellListSelect";
 import { PlayerCardData } from "@/model/playerCardTemplate";
 
 interface PlayerCardProps {
-  initialData?: PlayerCardData;
-  onClose?: () => void;
+    initialData?: PlayerCardData;
+    onClose?: () => void;
+    partyId?: string;
 }
 
-export default function PlayerCard({ initialData, onClose }: PlayerCardProps) {
+export default function PlayerCard({ initialData, onClose, partyId }: PlayerCardProps) {
     // State centralisé pour la fiche joueur (exemple minimal)
     const [player, setPlayer] = useState<PlayerCardData>(
         initialData ?? {
@@ -51,10 +52,12 @@ export default function PlayerCard({ initialData, onClose }: PlayerCardProps) {
     const handleSave = async () => {
         try {
             const method = initialData ? "PUT" : "POST";
+            // Ajoute partyId à la fiche joueur si création
+            const payload = initialData ? player : { ...player, partyId };
             const res = await fetch("/api/playerCard", {
                 method,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(player),
+                body: JSON.stringify(payload),
             });
             if (!res.ok) throw new Error("Erreur lors de l'enregistrement");
             alert("Fiche joueur enregistrée !");

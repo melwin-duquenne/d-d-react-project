@@ -29,7 +29,7 @@ export default function Nav() {
         />
         <h1 className="text-2xl font-bold font-serif">La Taverne du Héros</h1>
       {isConnected && (
-        <Link className="ml-8 font-bold" href="/master">Master</Link>
+        <Link className="ml-8 font-bold" href="/partyList">Parties</Link>
       )}
       </div>
       
