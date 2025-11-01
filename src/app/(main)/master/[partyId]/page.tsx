@@ -48,7 +48,7 @@ export default function MasterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center backdrop-blur-md">
       <div className="w-1/2 h-screen">
-        <SlateEditor />
+        <SlateEditor initialText={party.adventureText ?? ""} partyId={partyId} />
       </div>
       <div className="w-1/2 min-h-screen">
         {/* Passer partyId à ListMonster pour filtrer les cartes joueurs */}
