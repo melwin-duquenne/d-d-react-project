@@ -8,9 +8,10 @@ import ListPlayerCard from "./player/ListPlayerCard";
 interface ListMonsterProps {
     partyId: string;
     isOwner: boolean;
+    onInsertMonster?: (monsterName: string) => void;
 }
 
-export default function ListMonster({ partyId, isOwner }: ListMonsterProps) {
+export default function ListMonster({ partyId, isOwner, onInsertMonster }: ListMonsterProps) {
 
     const [monsters, setMonsters] = useState<Monsters>([]);
     const [search, setSearch] = useState("");
@@ -23,7 +24,18 @@ export default function ListMonster({ partyId, isOwner }: ListMonsterProps) {
             .then(data => setMonsters(data))
             .catch(() => setMonsters([]))
             .finally(() => setLoading(false));
-    }, []);
+        // Listen for monster tag click events from SlateEditor
+        const handler = (e: CustomEvent) => {
+            const monsterName = (e.detail.monsterName || "").toLowerCase().trim();
+            // Find monster index by name (case-insensitive, trimmed)
+            const monster = monsters.find(m => m.name.toLowerCase().trim() === monsterName);
+            if (monster) setSelectedIndex(monster.index);
+        };
+        window.addEventListener('openMonsterModal', handler as EventListener);
+        return () => {
+            window.removeEventListener('openMonsterModal', handler as EventListener);
+        };
+    }, [monsters]);
 
     const filtered = monsters.filter(m =>
         m.name.toLowerCase().includes(search.toLowerCase())
@@ -48,10 +60,15 @@ export default function ListMonster({ partyId, isOwner }: ListMonsterProps) {
                                         {filtered.map(monster => (
                                             <li
                                                 key={monster.index}
-                                                className="border-b pb-2 cursor-pointer hover:bg-amber-100"
-                                                onClick={() => setSelectedIndex(monster.index)}
+                                                className="border-b pb-2 flex items-center cursor-pointer hover:bg-amber-100"
                                             >
-                                                {monster.name}
+                                                <span onClick={() => setSelectedIndex(monster.index)} className="flex-1 cursor-pointer">{monster.name}</span>
+                                                <button
+                                                    className="ml-2 px-2 py-1 text-xs bg-amber-700 text-white rounded"
+                                                    onClick={() => onInsertMonster && onInsertMonster(monster.name)}
+                                                >
+                                                    +
+                                                </button>
                                             </li>
                                         ))}
                                     </ul>

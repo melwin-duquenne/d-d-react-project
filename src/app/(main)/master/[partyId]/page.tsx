@@ -11,6 +11,7 @@ export default function MasterPage() {
   const [party, setParty] = useState<Party | null>(null);
   const [loading, setLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
+  const [insertMonsterName, setInsertMonsterName] = useState<string | null>(null);
 
   // Récupérer l'email du master connecté depuis le token localStorage
   const getMasterEmail = (): string => {
@@ -48,11 +49,19 @@ export default function MasterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center backdrop-blur-md">
       <div className="w-1/2 h-screen">
-        <SlateEditor initialText={party.adventureText ?? ""} partyId={partyId} />
+        <SlateEditor
+          initialText={party.adventureText ?? ""}
+          partyId={partyId}
+          insertMonsterName={insertMonsterName}
+          onMonsterInserted={() => setInsertMonsterName(null)}
+        />
       </div>
       <div className="w-1/2 min-h-screen">
-        {/* Passer partyId à ListMonster pour filtrer les cartes joueurs */}
-        <ListMonster partyId={partyId as string} isOwner={isOwner} />
+        <ListMonster
+          partyId={partyId as string}
+          isOwner={isOwner}
+          onInsertMonster={name => setInsertMonsterName(name)}
+        />
       </div>
     </div>
   );
