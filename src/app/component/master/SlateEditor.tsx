@@ -3,7 +3,11 @@ import React, { useMemo, useState } from "react";
 import { Slate, Editable, withReact, useSlateStatic, ReactEditor } from "slate-react";
 import { createEditor, Transforms, Editor, Element as SlateElement } from "slate";
 
-import { Descendant, Text, BaseElement } from "slate";
+import { Descendant as SlateDescendant, BaseElement, Text } from "slate";
+
+// Use Slate's built-in types and cast custom elements to 'any' where needed
+
+import type { Descendant } from "slate";
 
 const initialValue: Descendant[] = [
   {
@@ -22,20 +26,72 @@ interface SlateEditorProps {
 }
 
 export default function SlateEditor({ initialText = "", partyId, insertMonsterName, onMonsterInserted }: SlateEditorProps) {
-  const editor = useMemo(() => withReact(createEditor()), []);
+  const editor = useMemo(() => {
+    const e = withReact(createEditor());
+    // Declare monster-tag as inline and void for Slate
+    const { isInline, isVoid } = e;
+    e.isInline = element => {
+      return (element as any).type === "monster-tag" ? true : isInline(element);
+    };
+    e.isVoid = element => {
+      return (element as any).type === "monster-tag" ? true : isVoid(element);
+    };
+    return e;
+  }, []);
+
+  // Insert a bulleted or numbered list at the current selection
+  function insertList(type: "bulleted-list" | "numbered-list") {
+    const list = {
+      type,
+      children: [
+        {
+          type: "list-item",
+          children: [{ text: "" }],
+        },
+      ],
+    } as any;
+    Transforms.insertNodes(editor, list);
+  }
   // Insertion automatique de balise monstre
   React.useEffect(() => {
     if (insertMonsterName) {
       const { selection } = editor;
       if (selection) {
-        // Insert a custom monster-tag element at the cursor
-        Transforms.insertNodes(editor, {
-          type: "monster-tag",
-          name: insertMonsterName,
-          children: [{ text: "" }],
-        } as any);
-        if (onMonsterInserted) onMonsterInserted();
+        Transforms.insertNodes(
+          editor,
+          [
+            {
+              type: "monster-tag",
+              name: insertMonsterName,
+              children: [],
+            } as any,
+            { text: " " }
+          ],
+          { at: selection }
+        );
+        const anchor = selection.anchor;
+        const nextPath = [...anchor.path.slice(0, -1), anchor.path[anchor.path.length - 1] + 1];
+        Transforms.select(editor, { path: nextPath, offset: 1 });
+      } else {
+        // Fallback: insert at end of first paragraph
+        const firstParagraphPath = [0];
+        const firstParagraph = Editor.node(editor, firstParagraphPath)[0];
+        const len = Array.isArray((firstParagraph as any).children) ? (firstParagraph as any).children.length : 0;
+        Transforms.insertNodes(
+          editor,
+          [
+            {
+              type: "monster-tag",
+              name: insertMonsterName,
+              children: [{ text: "" }],
+            } as any,
+            { text: " " }
+          ],
+          { at: [0, len] }
+        );
+        Transforms.select(editor, { path: [0, len + 1], offset: 1 });
       }
+      if (onMonsterInserted) onMonsterInserted();
     }
   }, [insertMonsterName, editor, onMonsterInserted]);
   // Parse initialText to convert [monster:Name] tags into monster-tag elements
@@ -61,16 +117,28 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
       } as any,
     ];
   }
-  const [value, setValue] = useState<Descendant[]>(
-    initialText ? parseAdventureText(initialText) : initialValue
-  );
+  // Charger le texte initial : si c'est du JSON, le parser, sinon parser l'ancien format texte
+  let initialSlateValue: Descendant[] = initialValue;
+  try {
+    if (initialText) {
+      if (initialText.trim().startsWith("[{")) {
+        initialSlateValue = JSON.parse(initialText);
+      } else {
+        initialSlateValue = parseAdventureText(initialText);
+      }
+    }
+  } catch {
+    initialSlateValue = initialValue;
+  }
+  const [value, setValue] = useState<Descendant[]>(initialSlateValue);
   const [saving, setSaving] = useState(false);
 
   // Format toggle helpers
   const toggleFormat = (format: "bold" | "italic") => {
+    const isActive = Editor.marks(editor)?.[format] === true;
     Transforms.setNodes(
       editor,
-      { [format]: true },
+      { [format]: isActive ? undefined : true },
       { match: n => Text.isText(n), split: true }
     );
   };
@@ -78,24 +146,11 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
   // Enregistrement manuel
   const handleSave = async () => {
     setSaving(true);
-    // Extraction robuste du texte pour tous les types de nœuds, y compris les balises monstre
-    const extractText = (nodes: Descendant[]): string => {
-      return nodes.map(n => {
-        if ('type' in n && (n as any).type === 'monster-tag' && 'name' in n) {
-          return `[monster:${(n as any).name}]`;
-        }
-        if ('children' in n && Array.isArray(n.children)) {
-          return extractText(n.children as Descendant[]);
-        }
-        // @ts-ignore
-        return n.text || "";
-      }).join(" ");
-    };
-    const text = extractText(value);
+    // Enregistrer le contenu Slate (JSON) pour garder la structure, le format et les tags
     await fetch("/api/party", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ partyId, adventureText: text }),
+      body: JSON.stringify({ partyId, adventureText: JSON.stringify(value) }),
     });
     setSaving(false);
   };
@@ -123,6 +178,26 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
             }}
           >
             Italique
+          </button>
+          <button
+            type="button"
+            className="px-2 py-1 text-black rounded hover:bg-amber-200"
+            onMouseDown={event => {
+              event.preventDefault();
+              insertList("bulleted-list");
+            }}
+          >
+            • Liste à points
+          </button>
+          <button
+            type="button"
+            className="px-2 py-1 text-black rounded hover:bg-amber-200"
+            onMouseDown={event => {
+              event.preventDefault();
+              insertList("numbered-list");
+            }}
+          >
+            1. Liste numérotée
           </button>
           <button
             type="button"
@@ -156,8 +231,8 @@ function Leaf({ attributes, children, leaf }: { attributes: Record<string, unkno
   return <span {...attributes}>{rendered}</span>;
 }
 
-// Custom element renderer for monster tags
-function Element({ attributes, children, element }: { attributes: any; children: React.ReactNode; element: SlateElement }) {
+// Custom element renderer for lists and monster tags
+function Element({ attributes, children, element }: { attributes: any; children: React.ReactNode; element: any }) {
   const editor = useSlateStatic();
   if ((element as any).type === "monster-tag") {
     const name = (element as any).name;
@@ -191,6 +266,15 @@ function Element({ attributes, children, element }: { attributes: any; children:
         </span>
       </span>
     );
+  }
+  if (element.type === "bulleted-list") {
+    return <ul {...attributes} className="list-disc ml-6">{children}</ul>;
+  }
+  if (element.type === "numbered-list") {
+    return <ol {...attributes} className="list-decimal ml-6">{children}</ol>;
+  }
+  if (element.type === "list-item") {
+    return <li {...attributes}>{children}</li>;
   }
   return <span {...attributes}>{children}</span>;
 }
