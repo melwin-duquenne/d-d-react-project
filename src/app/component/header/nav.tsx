@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import {useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 
 export default function Nav() {

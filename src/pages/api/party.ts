@@ -19,11 +19,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === "PUT") {
-    // Récupérer une partie par son id
+    // Récupérer une partie par son id et vérifier l'ownership
     const { id } = req.body;
     if (!id) return res.status(400).json({ error: "ID requis" });
     const party = await getPartyById(id);
     if (!party) return res.status(404).json({ error: "Partie non trouvée" });
+
+    // Récupération de l'email via le token NextAuth (compatible JWT/JWE)
+    const { getToken } = await import("next-auth/jwt");
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    const userEmail = token?.email ?? null;
+    // Log temporaire pour debug
+    console.log("[API/party] userEmail:", userEmail, "party.masterEmail:", party.masterEmail);
+    if (!userEmail || userEmail !== party.masterEmail) {
+      return res.status(403).json({ error: "Accès interdit" });
+    }
     return res.status(200).json({ success: true, party });
   }
 

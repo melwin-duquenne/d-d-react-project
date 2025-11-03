@@ -47,9 +47,37 @@ export default function AuthCard() {
         });
       }
     } else {
-      // Inscription : à adapter selon ta logique (API custom ou NextAuth callback)
-      setError("Inscription non gérée par NextAuth. Utilise une API custom pour créer l'utilisateur.");
-      toast.error("Inscription non gérée par NextAuth. Utilise une API custom pour créer l'utilisateur.");
+      // Inscription via API custom
+      try {
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || "Erreur lors de l'inscription");
+          toast.error(data.error || "Erreur lors de l'inscription");
+        } else {
+          setSuccess("Inscription réussie ! Connexion en cours...");
+          toast.success("Inscription réussie ! Connexion en cours...", {
+            autoClose: 1200,
+            onClose: async () => {
+              const result = await signIn("credentials", {
+                redirect: false,
+                email,
+                password,
+              });
+              if (!result?.error) {
+                window.location.href = "/";
+              }
+            },
+          });
+        }
+      } catch (err) {
+        setError("Erreur serveur");
+        toast.error("Erreur serveur");
+      }
     }
   }
   return (
@@ -123,9 +151,9 @@ export default function AuthCard() {
             <button
               type="submit"
               className="bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 rounded-xl shadow-lg transition-all duration-200 hover:scale-105"
-              disabled={isLogin ? !!session : true} // désactive le bouton si déjà connecté ou inscription non gérée
+              disabled={!!session} // désactive le bouton si déjà connecté
             >
-              {isLogin ? "Se connecter" : "S'inscrire (désactivé)"}
+              {isLogin ? "Se connecter" : "S'inscrire"}
             </button>
           </form>
           {error && <div className="mt-4 text-red-600 text-center">{error}</div>}

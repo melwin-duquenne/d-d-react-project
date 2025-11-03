@@ -26,6 +26,7 @@ export default function MasterPage() {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: partyId }),
+      credentials: "include", // Ajout pour transmettre le cookie de session
     })
       .then(res => res.json())
       .then(data => {
