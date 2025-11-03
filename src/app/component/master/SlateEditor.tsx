@@ -33,18 +33,7 @@ type MonsterTagElement = {
 type CustomElement = ParagraphElement | BulletedListElement | NumberedListElement | ListItemElement | MonsterTagElement;
 type CustomDescendant = CustomElement | Text;
 
-// Module augmentation for Slate
-declare module "slate" {
-  interface CustomTypes {
-    Editor: BaseEditor & ReactEditor;
-    Element: CustomElement;
-    Text: {
-      text: string;
-      bold?: boolean;
-      italic?: boolean;
-    };
-  }
-}
+
 
 
 
