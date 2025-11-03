@@ -1,13 +1,52 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { Slate, Editable, withReact, useSlateStatic, ReactEditor } from "slate-react";
-import { createEditor, Transforms, Editor, Element as SlateElement } from "slate";
+import { createEditor, Transforms, Editor, Element as SlateElement, BaseEditor, Node, Descendant, Text } from "slate";
 
-import { Descendant as SlateDescendant, BaseElement, Text } from "slate";
+// Define custom Slate element types
+type ParagraphElement = {
+  type: "paragraph";
+  children: Text[];
+};
 
-// Use Slate's built-in types and cast custom elements to 'any' where needed
+type BulletedListElement = {
+  type: "bulleted-list";
+  children: ListItemElement[];
+};
 
-import type { Descendant } from "slate";
+type NumberedListElement = {
+  type: "numbered-list";
+  children: ListItemElement[];
+};
+
+type ListItemElement = {
+  type: "list-item";
+  children: Text[];
+};
+
+type MonsterTagElement = {
+  type: "monster-tag";
+  name: string;
+  children: Text[];
+};
+
+type CustomElement = ParagraphElement | BulletedListElement | NumberedListElement | ListItemElement | MonsterTagElement;
+type CustomDescendant = CustomElement | Text;
+
+// Module augmentation for Slate
+declare module "slate" {
+  interface CustomTypes {
+    Editor: BaseEditor & ReactEditor;
+    Element: CustomElement;
+    Text: {
+      text: string;
+      bold?: boolean;
+      italic?: boolean;
+    };
+  }
+}
+
+
 
 const initialValue: Descendant[] = [
   {
@@ -17,7 +56,6 @@ const initialValue: Descendant[] = [
 ];
 
 // Custom monster tag element type
-type MonsterTagElement = BaseElement & { type: "monster-tag"; name: string; children: [{ text: "" }] };
 interface SlateEditorProps {
   initialText?: string;
   partyId: string;
@@ -30,18 +68,18 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
     const e = withReact(createEditor());
     // Declare monster-tag as inline and void for Slate
     const { isInline, isVoid } = e;
-    e.isInline = element => {
-      return (element as any).type === "monster-tag" ? true : isInline(element);
+    e.isInline = (element: SlateElement) => {
+      return (element as CustomElement).type === "monster-tag" ? true : isInline(element);
     };
-    e.isVoid = element => {
-      return (element as any).type === "monster-tag" ? true : isVoid(element);
+    e.isVoid = (element: SlateElement) => {
+      return (element as CustomElement).type === "monster-tag" ? true : isVoid(element);
     };
     return e;
   }, []);
 
   // Insert a bulleted or numbered list at the current selection
   function insertList(type: "bulleted-list" | "numbered-list") {
-    const list = {
+    const list: BulletedListElement | NumberedListElement = {
       type,
       children: [
         {
@@ -49,47 +87,35 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
           children: [{ text: "" }],
         },
       ],
-    } as any;
-    Transforms.insertNodes(editor, list);
+    };
+  Transforms.insertNodes(editor, list as Node);
   }
   // Insertion automatique de balise monstre
   React.useEffect(() => {
     if (insertMonsterName) {
       const { selection } = editor;
+      const monsterTag: MonsterTagElement = {
+        type: "monster-tag",
+        name: insertMonsterName,
+        children: [{ text: "" }],
+      };
       if (selection) {
-        Transforms.insertNodes(
-          editor,
-          [
-            {
-              type: "monster-tag",
-              name: insertMonsterName,
-              children: [],
-            } as any,
-            { text: " " }
-          ],
-          { at: selection }
-        );
+        // Insert the monster tag inline at the current selection
+    Transforms.insertNodes(editor, monsterTag as Node, { at: selection });
+        // Insert a space after the tag for easier editing
+        Transforms.insertText(editor, " ");
+        // Move cursor after the space
         const anchor = selection.anchor;
-        const nextPath = [...anchor.path.slice(0, -1), anchor.path[anchor.path.length - 1] + 1];
-        Transforms.select(editor, { path: nextPath, offset: 1 });
+        const nextPath = [...anchor.path.slice(0, -1), anchor.path[anchor.path.length - 1] + 2];
+        Transforms.select(editor, { path: nextPath, offset: 0 });
       } else {
         // Fallback: insert at end of first paragraph
         const firstParagraphPath = [0];
-        const firstParagraph = Editor.node(editor, firstParagraphPath)[0];
-        const len = Array.isArray((firstParagraph as any).children) ? (firstParagraph as any).children.length : 0;
-        Transforms.insertNodes(
-          editor,
-          [
-            {
-              type: "monster-tag",
-              name: insertMonsterName,
-              children: [{ text: "" }],
-            } as any,
-            { text: " " }
-          ],
-          { at: [0, len] }
-        );
-        Transforms.select(editor, { path: [0, len + 1], offset: 1 });
+  const firstParagraph = Editor.node(editor, firstParagraphPath)[0];
+  const len = Array.isArray((firstParagraph as ParagraphElement).children) ? (firstParagraph as ParagraphElement).children.length : 0;
+  Transforms.insertNodes(editor, monsterTag as Node, { at: [0, len] });
+  Transforms.insertText(editor, " ");
+  Transforms.select(editor, { path: [0, len + 1], offset: 0 });
       }
       if (onMonsterInserted) onMonsterInserted();
     }
@@ -99,22 +125,22 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
     if (!text) return initialValue;
     // Split by monster tags
     const parts = text.split(/(\[monster:[^\]]+\])/g);
-    const children: Descendant[] = parts.map(part => {
+    const children: CustomDescendant[] = parts.map(part => {
       const match = part.match(/^\[monster:(.+?)\]$/);
       if (match) {
         return {
           type: "monster-tag",
           name: match[1],
           children: [{ text: "" }],
-        } as any;
+        };
       }
       return { text: part };
     });
     return [
       {
         type: "paragraph",
-        children: children as any,
-      } as any,
+        children: children.filter(Boolean) as Text[],
+      },
     ];
   }
   // Charger le texte initial : si c'est du JSON, le parser, sinon parser l'ancien format texte
@@ -167,7 +193,7 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
               toggleFormat("bold");
             }}
           >
-            Gras
+            G
           </button>
           <button
             type="button"
@@ -177,7 +203,7 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
               toggleFormat("italic");
             }}
           >
-            Italique
+            I
           </button>
           <button
             type="button"
@@ -187,7 +213,7 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
               insertList("bulleted-list");
             }}
           >
-            • Liste à points
+            •
           </button>
           <button
             type="button"
@@ -197,7 +223,7 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
               insertList("numbered-list");
             }}
           >
-            1. Liste numérotée
+            1.
           </button>
           <button
             type="button"
@@ -213,6 +239,33 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
           renderLeaf={props => <Leaf {...props} />}
           renderElement={props => <Element {...props} />}
           placeholder="Écris ton texte ici..."
+          onKeyDown={event => {
+            if (event.key === "Enter") {
+              const { selection } = editor;
+              if (selection) {
+                const parent = Editor.parent(editor, selection)[0];
+                if (
+                  typeof parent === "object" && parent !== null && "type" in parent && (parent as any).type === "list-item" &&
+                  Editor.string(editor, selection.anchor.path) === ""
+                ) {
+                  event.preventDefault();
+                  // Trouve le chemin du parent (la liste)
+                  const listPath = Editor.parent(editor, selection.anchor.path)[1].slice(0, -1);
+                  const listIndex = listPath[0];
+                  // Supprime le list-item vide
+                  Transforms.removeNodes(editor, { at: selection.anchor.path });
+                  // Insère un nouveau paragraphe à la racine juste après la liste
+                  Transforms.insertNodes(
+                    editor,
+                    { type: "paragraph", children: [{ text: "" }] } as unknown as Node,
+                    { at: [listIndex + 1] }
+                  );
+                  // Place le curseur dans le nouveau paragraphe
+                  Transforms.select(editor, { path: [listIndex + 1, 0], offset: 0 });
+                }
+              }
+            }
+          }}
         />
       </Slate>
     </div>
@@ -220,7 +273,12 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
 }
 
 // Custom leaf renderer for bold/italic
-function Leaf({ attributes, children, leaf }: { attributes: Record<string, unknown>; children: React.ReactNode; leaf: Text }) {
+interface LeafProps {
+  attributes: Record<string, unknown>;
+  children: React.ReactNode;
+  leaf: Text;
+}
+function Leaf({ attributes, children, leaf }: LeafProps) {
   let rendered = children;
   if (leaf.bold) {
     rendered = <strong>{rendered}</strong>;
@@ -232,14 +290,20 @@ function Leaf({ attributes, children, leaf }: { attributes: Record<string, unkno
 }
 
 // Custom element renderer for lists and monster tags
-function Element({ attributes, children, element }: { attributes: any; children: React.ReactNode; element: any }) {
+interface ElementProps {
+  attributes: Record<string, unknown>;
+  children: React.ReactNode;
+  element: CustomElement;
+}
+function Element({ attributes, children, element }: ElementProps) {
   const editor = useSlateStatic();
-  if ((element as any).type === "monster-tag") {
-    const name = (element as any).name;
+  if (element.type === "monster-tag") {
+    const name = (element as MonsterTagElement).name;
     // Remove the monster tag node on close button click
-    const removeTag = (e: React.MouseEvent) => {
+    const removeTag = (e: React.MouseEvent<HTMLSpanElement>) => {
       e.preventDefault();
-      const path = ReactEditor.findPath(editor, element);
+      e.stopPropagation();
+      const path = ReactEditor.findPath(editor, element as unknown as Node);
       Transforms.removeNodes(editor, { at: path });
     };
     return (
@@ -248,15 +312,13 @@ function Element({ attributes, children, element }: { attributes: any; children:
         contentEditable={false}
         style={{ background: '#ffe082', color: '#6d4c41', borderRadius: '4px', padding: '2px 6px', cursor: 'pointer', fontWeight: 'bold', margin: '0 2px', display: 'inline-block', position: 'relative' }}
         title={`Voir le monstre ${name}`}
+        onMouseDown={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          window.dispatchEvent(new CustomEvent('openMonsterModal', { detail: { monsterName: name } }));
+        }}
       >
-        <span
-          onMouseDown={e => {
-            e.preventDefault();
-            window.dispatchEvent(new CustomEvent('openMonsterModal', { detail: { monsterName: name } }));
-          }}
-        >
-          {`[${name}]`}
-        </span>
+        <span style={{ cursor: 'pointer' }}>{`[${name}]`}</span>
         <span
           style={{ position: 'absolute', top: '-8px', right: '-8px', background: '#fff', color: '#d32f2f', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', border: '1px solid #d32f2f' }}
           title="Supprimer le tag"

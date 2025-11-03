@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchAllMonsters } from "@/fetch/MonsterFetch";
 import MonsterModal from "@/app/component/modal/monsterModal";
 import { Monsters } from "@/model/monster";
@@ -18,24 +18,38 @@ export default function ListMonster({ partyId, isOwner, onInsertMonster }: ListM
     const [loading, setLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
     const [showPlayerCard, setShowPlayerCard] = useState(false);
+    const monstersRef = React.useRef<Monsters>([]);
 
     useEffect(() => {
         fetchAllMonsters()
-            .then(data => setMonsters(data))
-            .catch(() => setMonsters([]))
+            .then(data => {
+                setMonsters(data);
+                monstersRef.current = data;
+            })
+            .catch(() => {
+                setMonsters([]);
+                monstersRef.current = [];
+            })
             .finally(() => setLoading(false));
+    }, []);
+
+    useEffect(() => {
+        monstersRef.current = monsters;
+    }, [monsters]);
+
+    useEffect(() => {
         // Listen for monster tag click events from SlateEditor
         const handler = (e: CustomEvent) => {
             const monsterName = (e.detail.monsterName || "").toLowerCase().trim();
             // Find monster index by name (case-insensitive, trimmed)
-            const monster = monsters.find(m => m.name.toLowerCase().trim() === monsterName);
+            const monster = monstersRef.current.find(m => m.name.toLowerCase().trim() === monsterName);
             if (monster) setSelectedIndex(monster.index);
         };
         window.addEventListener('openMonsterModal', handler as EventListener);
         return () => {
             window.removeEventListener('openMonsterModal', handler as EventListener);
         };
-    }, [monsters]);
+    }, []);
 
     const filtered = monsters.filter(m =>
         m.name.toLowerCase().includes(search.toLowerCase())
