@@ -20,12 +20,14 @@ export default function Nav() {
   return (
     <nav className="bg-[#f7f2c6] text-black p-4 w-full flex items-center justify-between">
       <div className="flex items-center">
-        <Image
-          src="/logo.webp"
-          alt="Logo"
-          width={100}
-          height={100}
-        />
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo.webp"
+            alt="Logo"
+            width={100}
+            height={100}
+          />
+        </Link>
         <h1 className="text-2xl font-bold font-serif">La Taverne du Héros</h1>
       {isConnected && (
         <Link className="ml-8 font-bold" href="/partyList">Parties</Link>
