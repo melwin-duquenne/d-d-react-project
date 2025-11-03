@@ -16,6 +16,7 @@ interface PlayerCardListItem {
   _id: string;
   name: string;
   partyId?: string;
+  level: number;
 }
 
 export default function ListPlayerCard({ partyId, isOwner }: ListPlayerCardProps) {
@@ -41,7 +42,7 @@ export default function ListPlayerCard({ partyId, isOwner }: ListPlayerCardProps
             onClick={() => setSelected(player.name)}
           >
             <Image src="/list.webp" alt="player" width={80} height={80} className="mb-2" />
-            <span className="font-semibold text-lg text-center break-words">{player.name}</span>
+            <span className="font-semibold text-lg text-center break-words">{player.name} lv:{player.level}</span>
           </div>
         ))}
       </div>

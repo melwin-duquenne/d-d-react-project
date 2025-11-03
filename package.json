@@ -11,11 +11,13 @@
   "dependencies": {
     "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
+    "cookie": "^1.0.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.20.0",
     "next": "15.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-toastify": "^11.0.5",
     "slate": "^0.118.1",
     "slate-react": "^0.117.4"
   },

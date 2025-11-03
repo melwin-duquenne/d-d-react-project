@@ -21,10 +21,25 @@ export default function ListMonster({ partyId, isOwner, onInsertMonster }: ListM
     const monstersRef = React.useRef<Monsters>([]);
 
     useEffect(() => {
+        // Try to load monsters from localStorage first
+        const cached = localStorage.getItem("monsters");
+        if (cached) {
+            try {
+                const parsed = JSON.parse(cached);
+                if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].name) {
+                    setMonsters(parsed);
+                    monstersRef.current = parsed;
+                    setLoading(false);
+                    return;
+                }
+            } catch {}
+        }
+        // Otherwise, fetch from API
         fetchAllMonsters()
             .then(data => {
                 setMonsters(data);
                 monstersRef.current = data;
+                localStorage.setItem("monsters", JSON.stringify(data));
             })
             .catch(() => {
                 setMonsters([]);

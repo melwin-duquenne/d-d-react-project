@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import ListMonster from "@/app/component/master/Listmonster";
 import SlateEditor from "@/app/component/master/SlateEditor";
 import { Party } from "@/model/partyModel";
+import { ToastContainer } from "react-toastify";
 
 export default function MasterPage() {
   const params = useParams();
@@ -48,6 +49,17 @@ export default function MasterPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center backdrop-blur-md">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="w-1/2 h-screen">
         <SlateEditor
           initialText={party.adventureText ?? ""}

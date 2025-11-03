@@ -2,19 +2,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import {useEffect, useState } from "react";
+import { checkAuth, logout } from "@/utils/authService";
 
 export default function Nav() {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Demo: check localStorage for a token
-    setIsConnected(!!localStorage.getItem("token"));
+    checkAuth().then(setIsConnected);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
+  const handleLogout = async () => {
+    await logout();
     setIsConnected(false);
-    // Optionally, redirect or reload
     window.location.href = "/login";
   };
 

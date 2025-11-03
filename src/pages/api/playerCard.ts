@@ -6,6 +6,7 @@ import {
   deletePlayerCard,
   getAllPlayerCards
 } from '../../model/playerCardModel';
+import { ObjectId } from 'mongodb';
 import { PlayerCardData } from '../../model/playerCardTemplate';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -36,21 +37,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (method === 'PUT') {
     // Mettre à jour une fiche joueur
-    const { name, ...update } = req.body;
-    if (!name || typeof name !== 'string') {
-      return res.status(400).json({ error: 'Name is required' });
+    const { _id, ...update } = req.body;
+    if (!_id || typeof _id !== 'string') {
+      return res.status(400).json({ error: '_id is required' });
     }
-    const result = await updatePlayerCard(name, update);
+    const client = await import('../../lib/db/mongodb').then(m => m.default);
+    const db = (await client).db('dnd');
+    const result = await db.collection('playerCards').updateOne({ _id: new ObjectId(_id) }, { $set: update });
     return res.status(200).json({ modifiedCount: result.modifiedCount });
   }
 
   if (method === 'DELETE') {
-    // Supprimer une fiche joueur
-    const { name } = req.body;
-    if (!name || typeof name !== 'string') {
-      return res.status(400).json({ error: 'Name is required' });
+    // Supprimer une fiche joueur par _id
+    const { _id } = req.body;
+    if (!_id || typeof _id !== 'string') {
+      return res.status(400).json({ error: '_id is required' });
     }
-    const result = await deletePlayerCard(name);
+    const client = await import('../../lib/db/mongodb').then(m => m.default);
+    const db = (await client).db('dnd');
+    const result = await db.collection('playerCards').deleteOne({ _id: new ObjectId(_id) });
     return res.status(200).json({ deletedCount: result.deletedCount });
   }
 

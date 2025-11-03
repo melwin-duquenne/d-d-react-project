@@ -37,7 +37,7 @@ export default function AuthCard() {
         setSuccess(isLogin ? "Connexion réussie !" : "Inscription réussie !");
         if (isLogin) {
           setConnected(true);
-          if (data.token) localStorage.setItem("token", data.token);
+          // Le token est maintenant géré via un cookie HTTP-only, aucune manipulation côté client
         }
       }
     } catch (err) {

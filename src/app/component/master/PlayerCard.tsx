@@ -1,6 +1,7 @@
 
 
 import { useState } from "react";
+import { toast } from "react-toastify";
 import AbilityScore from "./player/AbilityScore";
 import ClassSelect from "./player/ClassSelect";
 import EquipmentList from "./player/EquipmentList";
@@ -16,7 +17,7 @@ import SpellListSelect from "./player/SpellListSelect";
 import { PlayerCardData } from "@/model/playerCardTemplate";
 
 interface PlayerCardProps {
-    initialData?: PlayerCardData;
+    initialData?: PlayerCardData & { _id?: string };
     onClose?: () => void;
     partyId?: string;
 }
@@ -50,20 +51,39 @@ export default function PlayerCard({ initialData, onClose, partyId }: PlayerCard
     // TODO: Passer des setters aux sous-composants pour mettre à jour le state
 
     const handleSave = async () => {
+        // Validation: tout est obligatoire
+        
+        if (
+            !player.name.trim() ||
+            !player.race.trim() ||
+            !player.class.trim() ||
+            Object.values(player.abilityScores).some(v => typeof v !== "number") ||
+            player.languages.length === 0 ||
+            !player.history.trim()
+        ) {
+            console.log(player);
+            toast.error("les champs nom, race, class, langue et l'histoire sont obligatoires.");
+            return;
+        }
         try {
             const method = initialData ? "PUT" : "POST";
-            // Ajoute partyId à la fiche joueur si création
-            const payload = initialData ? player : { ...player, partyId };
+            // Ajoute partyId à la fiche joueur si création, et _id pour update
+            const payload = initialData && initialData._id
+                ? { ...player, _id: initialData._id }
+                : { ...player, partyId };
             const res = await fetch("/api/playerCard", {
                 method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
             if (!res.ok) throw new Error("Erreur lors de l'enregistrement");
-            alert("Fiche joueur enregistrée !");
+            toast.success("Fiche joueur enregistrée !");
+            setTimeout(() => {
+                window.location.reload();
+            }, 1200);
             if (onClose) onClose();
         } catch (e) {
-            alert("Erreur lors de l'enregistrement");
+            toast.error("Erreur lors de l'enregistrement");
         }
     };
 
@@ -126,7 +146,7 @@ export default function PlayerCard({ initialData, onClose, partyId }: PlayerCard
                             Annuler
                         </button>
                     )}
-                    <button className="bg-blue-500 text-white rounded px-4 py-2" onClick={handleSave}>
+                    <button className="bg-blue-500 text-white rounded px-4 py-2 cursor-pointer" onClick={handleSave}>
                         Enregistrer
                     </button>
                 </div>

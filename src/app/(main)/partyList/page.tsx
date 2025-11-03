@@ -69,7 +69,7 @@ export default function PartyListPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-12">
+    <div className="max-w-2xl mx-auto py-12 h-screen">
       <h1 className="text-3xl font-bold mb-8 text-center">Mes parties</h1>
       <form className="flex gap-4 mb-8" onSubmit={handleCreateParty}>
         <input
