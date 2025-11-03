@@ -244,9 +244,11 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
               const { selection } = editor;
               if (selection) {
                 const parent = Editor.parent(editor, selection)[0];
+                function isListItemElement(node: unknown): node is ListItemElement {
+                  return typeof node === "object" && node !== null && (node as ListItemElement).type === "list-item";
+                }
                 if (
-                  typeof parent === "object" && parent !== null && "type" in parent && (parent as any).type === "list-item" &&
-                  Editor.string(editor, selection.anchor.path) === ""
+                  isListItemElement(parent) && Editor.string(editor, selection.anchor.path) === ""
                 ) {
                   event.preventDefault();
                   // Trouve le chemin du parent (la liste)
