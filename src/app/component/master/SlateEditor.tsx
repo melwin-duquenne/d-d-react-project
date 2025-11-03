@@ -77,7 +77,7 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
         },
       ],
     };
-  Transforms.insertNodes(editor, list as Node);
+  Transforms.insertNodes(editor, list as unknown as Node);
   }
   // Insertion automatique de balise monstre
   React.useEffect(() => {
@@ -90,7 +90,7 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
       };
       if (selection) {
         // Insert the monster tag inline at the current selection
-    Transforms.insertNodes(editor, monsterTag as Node, { at: selection });
+    Transforms.insertNodes(editor, monsterTag as unknown as Node, { at: selection });
         // Insert a space after the tag for easier editing
         Transforms.insertText(editor, " ");
         // Move cursor after the space
@@ -102,7 +102,7 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
         const firstParagraphPath = [0];
   const firstParagraph = Editor.node(editor, firstParagraphPath)[0];
   const len = Array.isArray((firstParagraph as ParagraphElement).children) ? (firstParagraph as ParagraphElement).children.length : 0;
-  Transforms.insertNodes(editor, monsterTag as Node, { at: [0, len] });
+  Transforms.insertNodes(editor, monsterTag as unknown as Node, { at: [0, len] });
   Transforms.insertText(editor, " ");
   Transforms.select(editor, { path: [0, len + 1], offset: 0 });
       }
