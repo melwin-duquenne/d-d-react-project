@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import ListMonster from "@/app/component/master/Listmonster";
 import SlateEditor from "@/app/component/master/SlateEditor";
@@ -14,21 +15,12 @@ export default function MasterPage() {
   const [isOwner, setIsOwner] = useState(false);
   const [insertMonsterName, setInsertMonsterName] = useState<string | null>(null);
 
-  // Récupérer l'email du master connecté depuis le token localStorage
-  const getMasterEmail = (): string => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return "";
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload.email || "";
-    } catch {
-      return "";
-    }
-  };
-  const masterEmail = getMasterEmail();
+  // Récupérer l'email du master connecté via NextAuth
+  const { data: session } = useSession();
+  const masterEmail = session?.user?.email || "";
 
   useEffect(() => {
-    if (!partyId) return;
+    if (!partyId || !masterEmail) return;
     setLoading(true);
     fetch(`/api/party`, {
       method: "PUT",

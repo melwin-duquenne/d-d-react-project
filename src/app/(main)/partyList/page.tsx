@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 interface Party {
@@ -16,19 +17,9 @@ export default function PartyListPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Récupérer l'email du master connecté depuis le token localStorage
-  const getMasterEmail = (): string => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return "";
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload.email || "";
-    } catch {
-      return "";
-    }
-  };
-
-  const masterEmail = getMasterEmail();
+  // Récupérer l'email du master connecté via NextAuth
+  const { data: session } = useSession();
+  const masterEmail = session?.user?.email || "";
 
   useEffect(() => {
     if (!masterEmail) return;

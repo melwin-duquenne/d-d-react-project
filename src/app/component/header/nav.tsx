@@ -2,19 +2,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import {useEffect, useState } from "react";
-import { checkAuth, logout } from "@/utils/authService";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Nav() {
-  const [isConnected, setIsConnected] = useState(false);
+  const { data: session } = useSession();
 
-  useEffect(() => {
-    checkAuth().then(setIsConnected);
-  }, []);
+  const isConnected = !!session;
 
   const handleLogout = async () => {
-    await logout();
-    setIsConnected(false);
-    window.location.href = "/login";
+    await signOut({ callbackUrl: "/login" });
   };
 
   return (

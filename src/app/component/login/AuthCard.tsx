@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,7 +13,7 @@ export default function AuthCard() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [connected, setConnected] = useState(false);
+  const { data: session } = useSession();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,32 +29,27 @@ export default function AuthCard() {
       toast.error("Les mots de passe ne correspondent pas");
       return;
     }
-    try {
-      const res = await fetch("/api/auth", {
-        method: isLogin ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+    if (isLogin) {
+      // Connexion via next-auth
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Erreur inconnue");
-        toast.error(data.error || "Erreur inconnue");
+      if (result?.error) {
+        setError(result.error);
+        toast.error(result.error);
       } else {
-        setSuccess(isLogin ? "Connexion réussie !" : "Inscription réussie !");
-        toast.success(isLogin ? "Connexion réussie !" : "Inscription réussie !", {
-          onClose: () => {
-            if (isLogin) window.location.href = "/";
-          },
+        setSuccess("Connexion réussie !");
+        toast.success("Connexion réussie !", {
+          onClose: () => window.location.href = "/",
           autoClose: 1500,
         });
-        if (isLogin) {
-          setConnected(true);
-          // Le token est maintenant géré via un cookie HTTP-only, aucune manipulation côté client
-        }
       }
-    } catch (err) {
-      setError("Erreur serveur");
-      toast.error("Erreur serveur");
+    } else {
+      // Inscription : à adapter selon ta logique (API custom ou NextAuth callback)
+      setError("Inscription non gérée par NextAuth. Utilise une API custom pour créer l'utilisateur.");
+      toast.error("Inscription non gérée par NextAuth. Utilise une API custom pour créer l'utilisateur.");
     }
   }
   return (
@@ -127,14 +123,14 @@ export default function AuthCard() {
             <button
               type="submit"
               className="bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 rounded-xl shadow-lg transition-all duration-200 hover:scale-105"
-              disabled={connected}
+              disabled={isLogin ? !!session : true} // désactive le bouton si déjà connecté ou inscription non gérée
             >
-              {isLogin ? "Se connecter" : "S'inscrire"}
+              {isLogin ? "Se connecter" : "S'inscrire (désactivé)"}
             </button>
           </form>
           {error && <div className="mt-4 text-red-600 text-center">{error}</div>}
           {success && <div className="mt-4 text-green-600 text-center">{success}</div>}
-          {connected && <div className="mt-4 text-blue-600 text-center">Vous êtes connecté !</div>}
+          {session && <div className="mt-4 text-blue-600 text-center">Vous êtes connecté !</div>}
           <div className="mt-6 text-center">
             <button
               type="button"
