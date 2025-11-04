@@ -1,8 +1,6 @@
+import { UploadImageProps } from "@/model/map";
 import React, { useRef, useState } from "react";
 
-interface UploadImageProps {
-  onUpload: (url: string) => void;
-}
 
 export default function UploadImage({ onUpload }: UploadImageProps) {
   const [preview, setPreview] = useState<string | null>(null);

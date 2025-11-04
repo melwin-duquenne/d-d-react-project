@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import UploadImage from "../upload/UploadImage";
 import SelectImage from "../upload/SelectImage";
+import { Pawn } from "@/model/map";
 
-interface Pawn {
-  id: number;
-  x: number;
-  y: number;
-  color: string;
-  label: string;
-}
+
 
 export default function MapBoard() {
   const [pawns, setPawns] = useState<Pawn[]>([

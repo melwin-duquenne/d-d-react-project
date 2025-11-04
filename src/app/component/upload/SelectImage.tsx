@@ -1,10 +1,7 @@
+import { SelectImageProps } from "@/model/map";
 import React from "react";
 
-interface SelectImageProps {
-  images: string[];
-  value: string;
-  onChange: (url: string) => void;
-}
+
 
 export default function SelectImage({ images, value, onChange }: SelectImageProps) {
   return (

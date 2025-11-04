@@ -19,3 +19,10 @@ declare module "slate" {
     Text: Text;
   }
 }
+
+export interface SlateEditorProps {
+  initialText?: string;
+  partyId: string;
+  insertMonsterName?: string | null;
+  onMonsterInserted?: () => void;
+}

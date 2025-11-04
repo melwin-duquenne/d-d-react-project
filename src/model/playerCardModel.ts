@@ -38,3 +38,9 @@ export async function deletePlayerCard(name: string) {
   const db = client.db(DB_NAME);
   return db.collection(COLLECTION).deleteOne({ name });
 }
+
+export interface PlayerCardProps {
+    initialData?: PlayerCardData & { _id?: string };
+    onClose?: () => void;
+    partyId?: string;
+}

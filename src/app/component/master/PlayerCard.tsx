@@ -15,12 +15,9 @@ import SpellListSelect from "./player/SpellListSelect";
 
 
 import { PlayerCardData } from "@/model/playerCardTemplate";
+import { PlayerCardProps } from "@/model/playerCardModel";
 
-interface PlayerCardProps {
-    initialData?: PlayerCardData & { _id?: string };
-    onClose?: () => void;
-    partyId?: string;
-}
+
 
 export default function PlayerCard({ initialData, onClose, partyId }: PlayerCardProps) {
     // State centralisé pour la fiche joueur (exemple minimal)

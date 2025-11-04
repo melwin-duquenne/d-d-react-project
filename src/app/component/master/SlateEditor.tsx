@@ -2,6 +2,7 @@
 import React, { useMemo, useState } from "react";
 import { Slate, Editable, withReact, useSlateStatic, ReactEditor } from "slate-react";
 import { createEditor, Transforms, Editor, Element as SlateElement, BaseEditor, Node, Descendant, Text } from "slate";
+import { SlateEditorProps } from "@/model/slate";
 
 // Define custom Slate element types
 type ParagraphElement = {
@@ -45,12 +46,7 @@ const initialValue: Descendant[] = [
 ];
 
 // Custom monster tag element type
-interface SlateEditorProps {
-  initialText?: string;
-  partyId: string;
-  insertMonsterName?: string | null;
-  onMonsterInserted?: () => void;
-}
+
 
 export default function SlateEditor({ initialText = "", partyId, insertMonsterName, onMonsterInserted }: SlateEditorProps) {
   const editor = useMemo(() => {
