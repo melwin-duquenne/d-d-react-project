@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div className="flex w-full  items-center justify-center text-amber-800">
@@ -26,12 +28,9 @@ export default function Home() {
         </ul>
 
         <div className="flex justify-center gap-4 mt-8">
-          <button className="bg-amber-700 hover:bg-amber-800 text-white text-lg px-8 py-3 rounded-2xl shadow-lg transition-all duration-200 hover:scale-105">
-            Entrer dans la taverne
-          </button>
-          <button className="bg-amber-600 hover:bg-amber-700 text-white text-lg px-8 py-3 rounded-2xl shadow-lg transition-all duration-200 hover:scale-105">
-            Découvrir le bestiaire
-          </button>
+          <Link href="/partyList" className="bg-amber-700 hover:bg-amber-800 text-white text-lg px-8 py-3 rounded-2xl shadow-lg transition-all duration-200 hover:scale-105">
+            Débutez votre aventure
+          </Link>
         </div>
       </div>
       </div>

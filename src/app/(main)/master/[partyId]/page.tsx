@@ -6,6 +6,7 @@ import ListMonster from "@/app/component/master/Listmonster";
 import SlateEditor from "@/app/component/master/SlateEditor";
 import { Party } from "@/model/partyModel";
 import { ToastContainer } from "react-toastify";
+import MapBoard from "@/app/component/master/MapBoard";
 
 export default function MasterPage() {
   const params = useParams();
@@ -41,7 +42,7 @@ export default function MasterPage() {
   if (!party) return <div className="text-center py-12 text-red-600">Partie introuvable</div>;
 
   return (
-    <div className="flex min-h-screen items-center justify-center backdrop-blur-md">
+    <div className="flex min-h-screen justify-center backdrop-blur-md">
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -67,6 +68,7 @@ export default function MasterPage() {
           isOwner={isOwner}
           onInsertMonster={name => setInsertMonsterName(name)}
         />
+        <MapBoard />
       </div>
     </div>
   );
