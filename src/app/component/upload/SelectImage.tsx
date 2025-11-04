@@ -1,3 +1,4 @@
+'use client';
 import { SelectImageProps } from "@/model/map";
 import React from "react";
 
@@ -12,8 +13,8 @@ export default function SelectImage({ images, value, onChange }: SelectImageProp
         onChange={e => onChange(e.target.value)}
         className="border rounded px-2 py-1 w-full"
       >
-        {images.map((url, idx) => (
-          <option key={idx} value={url}>{url.split("/").pop()}</option>
+        {images.map((img, idx) => (
+          <option key={idx} value={img.url}>{img.name}</option>
         ))}
       </select>
     </div>

@@ -1,6 +1,18 @@
-import Link from "next/link";
+'use client';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  function handleStart() {
+    if (session) {
+      router.push("/partyList");
+    } else {
+      router.push("/login");
+    }
+  }
   return (
     <div className="flex w-full  items-center justify-center text-amber-800">
      <div className="flex flex-col items-center z-10 max-w-[60%] mt-8 bg-[url('/parchemin.webp')] bg-top bg-cover bg-center rounded-2xl p-10 text-center animate-scroll-fade">
@@ -28,9 +40,12 @@ export default function Home() {
         </ul>
 
         <div className="flex justify-center gap-4 mt-8">
-          <Link href="/partyList" className="bg-amber-700 hover:bg-amber-800 text-white text-lg px-8 py-3 rounded-2xl shadow-lg transition-all duration-200 hover:scale-105">
+          <button
+            onClick={handleStart}
+            className="bg-amber-700 hover:bg-amber-800 text-white text-lg px-8 py-3 rounded-2xl shadow-lg transition-all duration-200 hover:scale-105"
+          >
             Débutez votre aventure
-          </Link>
+          </button>
         </div>
       </div>
       </div>

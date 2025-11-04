@@ -1,4 +1,8 @@
+"use client";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import Image from "next/image";
 import UploadImage from "../upload/UploadImage";
 import SelectImage from "../upload/SelectImage";
 import { Pawn } from "@/model/map";
@@ -6,10 +10,14 @@ import { Pawn } from "@/model/map";
 
 
 export default function MapBoard() {
-  const [pawns, setPawns] = useState<Pawn[]>([
-    { id: 1, x: 100, y: 100, color: "#eab308", label: "A" },
-    { id: 2, x: 200, y: 180, color: "#2563eb", label: "B" },
-  ]);
+  const [zoom, setZoom] = useState(1);
+  function handleZoomIn() {
+    setZoom(z => Math.min(z + 0.2, 3));
+  }
+  function handleZoomOut() {
+    setZoom(z => Math.max(z - 0.2, 0.4));
+  }
+  const [pawns, setPawns] = useState<Pawn[]>([]);
   const [newPawn, setNewPawn] = useState({ label: "", color: "#eab308" });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editLabel, setEditLabel] = useState("");
@@ -17,12 +25,13 @@ export default function MapBoard() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   // Liste des maps du dossier public/basicMap
   const basicMaps = [
-    "/basicMap/camp.jpg",
-    "/basicMap/foreste-village.webp",
-    "/basicMap/Halloween-Dungeon.jpg"
+    { url: "/basicMap/camp.jpg", name: "camp.jpg" },
+    { url: "/basicMap/foreste-village.webp", name: "foreste-village.webp" },
+    { url: "/basicMap/Halloween-Dungeon.jpg", name: "Halloween-Dungeon.jpg" }
   ];
-  const [images, setImages] = useState<string[]>(basicMaps);
-  const [selectedImage, setSelectedImage] = useState<string>(basicMaps[0]);
+  const uploadedImages = useSelector((state: RootState) => state.mapImages.images);
+  const allImages = [...basicMaps, ...uploadedImages];
+  const [selectedImage, setSelectedImage] = useState<string>(basicMaps[0].url);
 
   function handleMouseDown(e: React.MouseEvent, id: number) {
     setDragged(id);
@@ -59,13 +68,12 @@ export default function MapBoard() {
     setDragged(null);
   }
   function handleUpload(url: string) {
-    setImages(imgs => [...imgs, url]);
-    setSelectedImage(url);
+  setSelectedImage(url);
   }
 
   return (
     <div className="mb-4 p-4 bg-white text-black">
-      <SelectImage images={images} value={selectedImage} onChange={setSelectedImage} />
+  <SelectImage images={allImages} value={selectedImage} onChange={setSelectedImage} />
       <UploadImage onUpload={handleUpload} />
       {/* Formulaire d'ajout de pion */}
       <form className="flex gap-2 items-center my-4" onSubmit={handleAddPawn}>
@@ -82,26 +90,54 @@ export default function MapBoard() {
           onChange={e => setNewPawn({ ...newPawn, color: e.target.value })}
           className="w-8 h-8 border rounded"
         />
-        <button type="submit" className="bg-blue-500 text-white px-3 py-1 rounded text-sm">Ajouter joueur</button>
+        <button type="submit" className="bg-amber-700 text-white px-3 py-1 rounded text-sm">Ajouter joueur</button>
       </form>
       <div
         className="relative w-full h-[800px] border rounded-lg overflow-hidden"
         style={{
-          backgroundImage: `url('${selectedImage}')`,
-          backgroundPosition: "center",
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat"
+          background: "#f3f3f3",
         }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
       >
+        {/* Map image zoomée */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: `100%`,
+            height: `100%`,
+            zIndex: 1,
+            pointerEvents: "none",
+            overflow: "hidden",
+          }}
+        >
+          <Image
+            src={selectedImage}
+            alt="map"
+            fill
+            style={{
+              objectFit: "contain",
+              transform: `scale(${zoom})`,
+              transformOrigin: "center center",
+              transition: "transform 0.2s",
+              pointerEvents: "none",
+              userSelect: "none",
+            }}
+            draggable={false}
+            priority
+          />
+        </div>
+
+        {/* Pions */}
         {pawns.map(pawn => (
           <div
             key={pawn.id}
             style={{
               position: "absolute",
-              left: pawn.x,
-              top: pawn.y,
+              left: pawn.x * zoom,
+              top: pawn.y * zoom,
               width: 40,
               height: 40,
               background: pawn.color,
@@ -162,7 +198,12 @@ export default function MapBoard() {
             >×</button>
           </div>
         ))}
-        <div className="absolute top-2 left-2 text-black bg-white bg-opacity-80 px-2 py-1 rounded shadow text-xs">Carte interactive</div>
+        <div className="absolute top-2 left-2 flex items-center z-30 gap-2 text-black bg-white bg-opacity-80 px-2 py-1 rounded shadow text-xs">
+          <span>Carte interactive</span>
+          <button onClick={handleZoomOut} className="px-2 py-1 bg-gray-200 rounded">-</button>
+          <span className="px-2">{(zoom * 100).toFixed(0)}%</span>
+          <button onClick={handleZoomIn} className="px-2 py-1 bg-gray-200 rounded">+</button>
+        </div>
       </div>
     </div>
   );

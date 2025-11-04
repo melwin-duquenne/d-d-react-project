@@ -7,7 +7,7 @@ export interface Pawn {
 }
 
 export interface SelectImageProps {
-  images: string[];
+  images: { url: string; name: string }[];
   value: string;
   onChange: (url: string) => void;
 }
