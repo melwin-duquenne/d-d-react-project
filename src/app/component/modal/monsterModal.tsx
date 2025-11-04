@@ -15,7 +15,7 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
   }, [index]);
 
   return (
-    <div className="fixed inset-0 bg-black flex items-center justify-center h-[calc(100vh+100px)] z-50 ">
+    <div className="fixed inset-0  flex items-center justify-center h-[calc(100vh+100px)] z-50 ">
       <div className="bg-[url('/book.webp')] bg-center bg-cover rounded-xl shadow-lg p-8 max-w-11/12 w-full relative ">
 
         <button className="absolute top-8 right-12 text-amber-700 text-2xl" onClick={onClose}>&times;</button>

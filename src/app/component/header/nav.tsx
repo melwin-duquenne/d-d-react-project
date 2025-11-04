@@ -25,8 +25,13 @@ export default function Nav() {
         </Link>
         <h1 className="text-2xl font-bold font-serif">La Taverne du Héros</h1>
       {isConnected && (
-        <Link className="ml-8 font-bold" href="/partyList">Parties</Link>
+        <button className="bg-amber-700 ml-8 hover:bg-amber-800 text-white font-bold py-2 px-4 rounded-xl shadow-lg transition-all duration-200 hover:scale-105">
+          <Link className="font-bold" href="/partyList">Parties</Link>
+        </button>
       )}
+      <button className="bg-amber-700 ml-8 hover:bg-amber-800 text-white font-bold py-2 px-4 rounded-xl shadow-lg transition-all duration-200 hover:scale-105">
+          <Link className="font-bold" href="/about">à propos</Link>
+        </button>
       </div>
       
       {isConnected ? (
