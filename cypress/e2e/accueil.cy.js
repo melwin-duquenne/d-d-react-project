@@ -6,14 +6,14 @@ describe('Accueil - La Taverne du Héros', () => {
   });
 
   it('affiche le texte d\'accueil', () => {
-    cy.visit('/');
+    cy.visit('/fr');
     cy.contains('Bienvenue, aventurier').should('be.visible');
     cy.contains('Maître du Jeu').should('be.visible');
     cy.contains('bestiaire complet').should('be.visible');
   });
 
   it('le bouton d\'aventure existe et est cliquable', () => {
-    cy.visit('/');
+    cy.visit('/fr');
     cy.get('button').contains('Débutez votre aventure').should('be.enabled');
   });
 });

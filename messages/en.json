@@ -1,0 +1,177 @@
+{
+  "welcome": "Welcome, adventurer!",
+  "startAdventure": "Start your adventure",
+  "parties": "My parties",
+  "createParty": "Create a party",
+  "home": {
+    "title": "The Hero's Tavern",
+    "intro1": "Welcome, adventurer!",
+    "intro2": "Here, stories come alive and quests are written in the ink of destiny.",
+    "intro3": "The Hero's Tavern is your ally to craft epic scenarios and easily manage your bestiary.",
+    "intro4": "Whether you are a Game Master or a player, this place will guide you in creating worlds, monsters, and legends.",
+    "feature1": "Authenticate as Game Master or Adventurer.",
+    "feature2": "Create and organize your scenario with a narrative editor.",
+    "feature3": "Browse a complete bestiary from the D&D 5e API.",
+    "feature4": "Create and manage your players' characters.",
+    "cta": "Start your adventure"
+  },
+  "partyList": {
+    "title": "My parties",
+    "inputPlaceholder": "Party name",
+    "create": "Create",
+    "errorLoading": "Error loading parties",
+    "nameRequired": "Party name required",
+    "errorCreate": "Error creating party",
+    "errorDelete": "Error deleting party",
+    "loading": "Loading...",
+    "access": "Access",
+    "delete": "Delete"
+  },
+  "nav": {
+    "title": "The Hero's Tavern",
+    "parties": "Games",
+    "about": "About",
+    "logout": "Logout",
+    "login": "Login"
+  },
+  "about": {
+    "title": "About",
+    "p1": "This project was carried out as part of a school assignment. Its main goal is to put into practice the skills I have acquired, to explore new knowledge, and to improve my application of them.",
+    "p2": "This is not an entrepreneurial or commercial project. Its sole purpose is to serve as a support for learning, experimentation, and demonstration of my technical and creative abilities.",
+    "p3": "By developing this project, I aim to progress, test my skills in a real-world context, and share the result of my work.",
+    "thanks": "Thank you for your visit and your interest!"
+  },
+  "login": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "loginButton": "Login",
+    "registerButton": "Register",
+    "noAccount": "No account? Register",
+    "alreadyAccount": "Already registered? Login",
+    "successLogin": "Login successful!",
+    "successRegister": "Registration successful! Logging in...",
+    "errorRequired": "Email and password required",
+    "errorPasswordMatch": "Passwords do not match",
+    "errorRegister": "Error during registration",
+    "errorServer": "Server error",
+    "connected": "You are logged in!"
+  },
+  "ability": {
+    "title": "Ability Scores",
+    "strength": "STR",
+    "dexterity": "DEX",
+    "constitution": "CON",
+    "intelligence": "INT",
+    "wisdom": "WIS",
+    "charisma": "CHA"
+  },
+  "equipment": {
+    "title": "Equipment & Magic Items",
+    "add": "Add...",
+    "magicSuffix": " (Magic)",
+    "remove": "Remove"
+  },
+  "history": {
+    "title": "History",
+    "placeholder": "Tell the character's story..."
+  },
+  "languageSelect": {
+    "label": "Languages"
+  },
+  "level": {
+    "title": "Level & XP Progress",
+    "current": "Current level:",
+    "xp": "XP:",
+    "toNext": "/ {nextLevelXp} (for level {nextLevel})",
+    "progress": "Progress to level {nextLevel}: {percent}%"
+  },
+  "listPlayerCard": {
+    "levelShort": "lv"
+  },
+  "nameText": {
+    "label": "Name:"
+  },
+  "playerCardView": {
+    "loading": "Loading...",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this character?",
+    "deleteSuccess": "Character deleted successfully!",
+    "deleteError": "Error while deleting",
+    "race": "Race",
+    "class": "Class",
+    "level": "Level",
+    "xp": "XP",
+    "characteristics": "Characteristics",
+    "languages": "Languages",
+    "skills": "Skills",
+    "spells": "Spells",
+    "equipment": "Equipment",
+    "magicItems": "Magic items",
+    "history": "History"
+  },
+  "raceSelect": {
+    "label": "Races"
+  },
+  "spellListSelect": {
+    "label": "Spells"
+  },
+  "playerCard": {
+    "title": "Player Sheet",
+    "cancel": "Cancel",
+    "save": "Save",
+    "requiredFields": "Name, race, class, language and history fields are required.",
+    "saveSuccess": "Player sheet saved!",
+    "saveError": "Error while saving"
+  },
+  "mapBoard": {
+    "addPlayer": "Add player",
+    "playerNamePlaceholder": "Player name",
+    "delete": "Delete",
+    "interactiveMap": "Interactive map"
+  },
+  "monsterModal": {
+    "loading": "Loading...",
+    "error": "Error loading sheet.",
+    "challenge": "Challenge rating",
+    "type": "Type",
+    "size": "Size",
+    "alignment": "Alignment",
+    "languages": "Languages",
+    "armorClass": "Armor class",
+    "hitPoints": "Hit points",
+    "speed": "Speed",
+    "strength": "Strength",
+    "dexterity": "Dexterity",
+    "constitution": "Constitution",
+    "intelligence": "Intelligence",
+    "wisdom": "Wisdom",
+    "charisma": "Charisma",
+    "xp": "XP",
+    "senses": "Senses",
+    "damageImmunities": "Damage immunities",
+    "damageResistances": "Damage resistances",
+    "damageVulnerabilities": "Damage vulnerabilities",
+    "conditionImmunities": "Condition immunities",
+    "skills": "Skills",
+    "specialAbilities": "Special abilities",
+    "damage": "Damage",
+    "actions": "Actions",
+    "legendaryActions": "Legendary actions"
+  },
+  "selectImage": {
+    "label": "Choose a map:"
+  },
+  "uploadImage": {
+    "addMap": "Add a map",
+    "errorSize": "Image too large (max 1 MB)"
+  },
+  "slateEditor": {
+    "saving": "Saving...",
+    "save": "Save"
+  }
+}
+

@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import SelectInput from "../../form/input/selectInput";
 import { fetchAllSpells } from "@/fetch/MonsterFetch";
+import { useTranslations } from 'next-intl';
 
 interface SpellListSelectProps {
   value: string[];
   onChange: (spells: string[]) => void;
 }
-
 export default function SpellListSelect({ value, onChange }: SpellListSelectProps) {
   const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
+  const t = useTranslations('spellListSelect');
 
   useEffect(() => {
     async function loadSpells() {
@@ -35,7 +36,7 @@ export default function SpellListSelect({ value, onChange }: SpellListSelectProp
   return (
     <div className="rounded p-4">
       <SelectInput
-        label="Sorts"
+        label={t('label')}
         name="spells"
         options={options}
         multiple

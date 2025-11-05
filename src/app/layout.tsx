@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./component/upload/storeProvider";
 import SessionWrapper from "@/utils/SessionWrapper";
-import Nav from "./component/header/nav";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,14 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html >
       <body className={inter.className}>
         <StoreProvider>
           <SessionWrapper>
-            <Nav />
-            <div className="bg-[url('/font.webp')] bg-center bg-cover">
-              {children}
-            </div>
+            {children}
           </SessionWrapper>
         </StoreProvider>
       </body>

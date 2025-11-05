@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import SelectInput from "../../form/input/selectInput";
 import { fetchAllLanguages } from "@/fetch/MonsterFetch";
+import { useTranslations } from 'next-intl';
 
 interface LanguageSelectProps {
   value: string[];
@@ -8,6 +9,7 @@ interface LanguageSelectProps {
 }
 
 export default function LanguageSelect({ value, onChange }: LanguageSelectProps) {
+  const t = useTranslations('languageSelect');
   const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function LanguageSelect({ value, onChange }: LanguageSelectProps)
   return (
     <div className="rounded p-4">
       <SelectInput
-        label="Langues"
+        label={t('label')}
         name="languages"
         options={options}
         multiple

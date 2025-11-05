@@ -1,18 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations, useLocale } from 'next-intl';
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { Partys } from "@/model/partyModel";
 
-interface Party {
-  _id: string;
-  name: string;
-  masterEmail: string;
-  createdAt: string | Date;
-}
 
 export default function PartyListPage() {
-  const [parties, setParties] = useState<Party[]>([]);
+  const locale = useLocale();
+  const [parties, setParties] = useState<Partys[]>([]);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -20,6 +17,9 @@ export default function PartyListPage() {
   // Récupérer l'email du master connecté via NextAuth
   const { data: session } = useSession();
   const masterEmail = session?.user?.email || "";
+
+  // Traductions
+  const t = useTranslations('partyList');
 
   useEffect(() => {
     if (!masterEmail) return;
@@ -31,7 +31,7 @@ export default function PartyListPage() {
         setLoading(false);
       })
       .catch(() => {
-        setError("Erreur lors du chargement des parties");
+        setError(t('errorLoading'));
         setLoading(false);
       });
   }, [masterEmail]);
@@ -39,7 +39,7 @@ export default function PartyListPage() {
   async function handleCreateParty(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-    if (!name) return setError("Nom de partie requis");
+  if (!name) return setError(t('nameRequired'));
     setLoading(true);
     const res = await fetch("/api/party", {
       method: "POST",
@@ -54,7 +54,7 @@ export default function PartyListPage() {
       ]);
       setName("");
     } else {
-      setError(data.error || "Erreur lors de la création");
+      setError(data.error || t('errorCreate'));
     }
     setLoading(false);
   }
@@ -71,40 +71,40 @@ export default function PartyListPage() {
       setParties(parties.filter(p => p._id !== id));
     } else {
       const data = await res.json();
-      setError(data.error || "Erreur lors de la suppression");
+      setError(data.error || t('errorDelete'));
     }
     setLoading(false);
   }
 
   return (
     <div className="max-w-2xl mx-auto py-12 h-screen">
-      <h1 className="text-3xl font-bold mb-8 text-center">Mes parties</h1>
+  <h1 className="text-3xl font-bold mb-8 text-center">{t('title')}</h1>
       <form className="flex gap-4 mb-8" onSubmit={handleCreateParty}>
         <input
           type="text"
           value={name}
           onChange={e => setName(e.target.value)}
-          placeholder="Nom de la partie"
+          placeholder={t('inputPlaceholder')}
           className="flex-1 px-4 py-2 border rounded"
         />
         <button type="submit" className="bg-amber-700 text-white px-6 py-2 rounded" disabled={loading}>
-          Créer
+          {t('create')}
         </button>
       </form>
-      {error && <div className="text-red-600 mb-4">{error}</div>}
-      {loading && <div className="text-gray-600">Chargement...</div>}
+  {error && <div className="text-red-600 mb-4">{error}</div>}
+  {loading && <div className="text-gray-600">{t('loading')}</div>}
       <ul className="space-y-4">
         {parties.map((party) => (
           <li key={party._id} className="border p-4 rounded flex justify-between items-center">
             <span className="font-semibold">{party.name}</span>
             <div className="flex gap-2">
-              <Link href={`/master/${party._id}`} className="bg-amber-700 text-white px-4 py-2 rounded">Accéder</Link>
+              <Link href={`/${locale}/master/${party._id}`} className="bg-amber-700 text-white px-4 py-2 rounded">{t('access')}</Link>
               <button
                 onClick={() => handleDeleteParty(party._id)}
                 className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
                 disabled={loading}
               >
-                Supprimer
+                {t('delete')}
               </button>
             </div>
           </li>

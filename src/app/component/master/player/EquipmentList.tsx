@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { fetchAllEquipment, fetchAllMagicItems } from "@/fetch/MonsterFetch";
-
+import { useTranslations } from "next-intl";
 interface EquipmentListProps {
   value: string[]; // équipement
   magicValue: string[]; // magic items
   onChange: (equipment: string[], magicItems: string[]) => void;
 }
-
 export default function EquipmentList({ value, magicValue, onChange }: EquipmentListProps) {
+  const t = useTranslations('equipment');
   const [items, setItems] = useState<{ label: string; value: string; isMagic: boolean }[]>([]);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function EquipmentList({ value, magicValue, onChange }: Equipment
           isMagic: false,
         }));
         const miOptions = magicItems.map((item: { name: string; index: string }) => ({
-          label: item.name + " (Magique)",
+          label: item.name + t('magicSuffix'),
           value: item.index,
           isMagic: true,
         }));
@@ -62,9 +62,9 @@ export default function EquipmentList({ value, magicValue, onChange }: Equipment
 
   return (
     <div className="rounded p-4">
-      <h3 className="font-bold mb-2">Équipement & Magic Items</h3>
+  <h3 className="font-bold mb-2">{t('title')}</h3>
       <select onChange={handleAdd} value="" className="bg-white rounded px-2 py-1 border w-full">
-        <option value="">Ajouter...</option>
+        <option value="">{t('add')}</option>
         {items
           .filter((item) => !value.includes(item.value) && !magicValue.includes(item.value))
           .map((item) => (
@@ -84,7 +84,7 @@ export default function EquipmentList({ value, magicValue, onChange }: Equipment
                 onClick={() => handleRemove(val)}
                 type="button"
               >
-                Retirer
+                {t('remove')}
               </button>
             </li>
           );

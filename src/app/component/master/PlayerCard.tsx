@@ -15,11 +15,13 @@ import SpellListSelect from "./player/SpellListSelect";
 
 
 import { PlayerCardData } from "@/model/playerCardTemplate";
+
+import { useTranslations } from 'next-intl';
 import { PlayerCardProps } from "@/model/playerCardModel";
 
 
-
 export default function PlayerCard({ initialData, onClose, partyId }: PlayerCardProps) {
+    const t = useTranslations('playerCard');
     // State centralisé pour la fiche joueur (exemple minimal)
     const [player, setPlayer] = useState<PlayerCardData>(
         initialData ?? {
@@ -49,7 +51,6 @@ export default function PlayerCard({ initialData, onClose, partyId }: PlayerCard
 
     const handleSave = async () => {
         // Validation: tout est obligatoire
-        
         if (
             !player.name.trim() ||
             !player.race.trim() ||
@@ -59,7 +60,7 @@ export default function PlayerCard({ initialData, onClose, partyId }: PlayerCard
             !player.history.trim()
         ) {
             console.log(player);
-            toast.error("les champs nom, race, class, langue et l'histoire sont obligatoires.");
+            toast.error(t('requiredFields'));
             return;
         }
         try {
@@ -73,20 +74,20 @@ export default function PlayerCard({ initialData, onClose, partyId }: PlayerCard
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
-            if (!res.ok) throw new Error("Erreur lors de l'enregistrement");
-            toast.success("Fiche joueur enregistrée !");
+            if (!res.ok) throw new Error('saveError');
+            toast.success(t('saveSuccess'));
             setTimeout(() => {
                 window.location.reload();
             }, 1200);
             if (onClose) onClose();
         } catch (e) {
-            toast.error("Erreur lors de l'enregistrement");
+            toast.error(t('saveError'));
         }
     };
 
     return (
         <div className="text-sm p-15 w-11/12 font-serif">
-            <h2 className="text-2xl font-bold mb-4 text-amber-800">Fiche Joueur</h2>
+            <h2 className="text-2xl font-bold mb-4 text-amber-800">{t('title')}</h2>
             <div className="grid gap-6">
                 <div className="flex w-full justify-between">
                     <NameText
@@ -140,11 +141,11 @@ export default function PlayerCard({ initialData, onClose, partyId }: PlayerCard
                 <div className="flex w-full justify-end gap-2">
                     {onClose && (
                         <button className="bg-gray-400 text-white rounded px-4 py-2" onClick={onClose}>
-                            Annuler
+                            {t('cancel')}
                         </button>
                     )}
                     <button className="bg-blue-500 text-white rounded px-4 py-2 cursor-pointer" onClick={handleSave}>
-                        Enregistrer
+                        {t('save')}
                     </button>
                 </div>
             </div>

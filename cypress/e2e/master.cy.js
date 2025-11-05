@@ -1,6 +1,6 @@
 describe('créer une party - La Taverne du Héros', () => {
     it('connexion, création de party, édition du scénario et ajout d\'un monstre', () => {
-    cy.visit('/login');
+    cy.visit('/fr/login');
     cy.get('input[type=email]').type(Cypress.env('ENV_MAIL_TEST'));
     cy.get('input[type=password]').first().type(Cypress.env('ENV_MDP_TEST'));
     cy.get('#validate').click();
@@ -13,7 +13,7 @@ describe('créer une party - La Taverne du Héros', () => {
         .find('a')
         .contains('Accéder')
         .click();
-    cy.url().should('include', '/master/');
+    cy.url().should('include', '/fr/master/');
     cy.wait(2000);
     cy.contains('Aboleth').should('be.visible');
         // Écrire dans le SlateEditor et enregistrer
@@ -27,7 +27,7 @@ describe('créer une party - La Taverne du Héros', () => {
             .click();
         cy.contains('[Aboleth]').should('be.visible');
 
-    cy.visit('/partyList');
+    cy.visit('/fr/partyList');
     cy.contains('li', partyName)
         .find('button')
         .contains('Supprimer')

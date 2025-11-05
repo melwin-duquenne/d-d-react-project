@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { fetchMonsterDetails } from "@/fetch/MonsterFetch";
 import Image from "next/image";
 import { MonsterDetails } from "@/model/monster";
+import { useTranslations } from 'next-intl';
 export default function MonsterModal({ index, onClose }: { index: string; onClose: () => void }) {
+  const t = useTranslations('monsterModal');
   const [monster, setMonster] = useState<MonsterDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -10,8 +12,9 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
   useEffect(() => {
     fetchMonsterDetails(index)
       .then(data => setMonster(data))
-      .catch(() => setError("Erreur lors du chargement de la fiche."))
+      .catch(() => setError(t('error')))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
 
   return (
@@ -20,13 +23,13 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
 
         <button className="absolute top-8 right-12 text-amber-700 text-2xl" onClick={onClose}>&times;</button>
         {loading ? (
-          <div>Chargement...</div>
+          <div>{t('loading')}</div>
         ) : error ? (
           <div className="text-red-500">{error}</div>
         ) : monster ? (
           <div className="text-md xl:px-20">
             <div className="text-2xl ml-6 font-bold mb-4 text-amber-800 font-serif">{monster.name}</div>
-            <div className="mb-2 ml-6 text-xl">Niveau de difficulté : {monster.challenge_rating}</div>
+            <div className="mb-2 ml-6 text-xl">{t('challenge')} : {monster.challenge_rating}</div>
             <div className="flex justify-between items-center w-full">
               {monster.image && (
                 <Image
@@ -40,55 +43,55 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
               <div className=" grid gap-2 max-w-5/12 font-script">
                 <div className="flex">
                   <div className="p-3 w-1/2 ">
-                    <div className="mb-2">Type : {monster.type}</div>
-                    <div className="mb-2">Taille : {monster.size}</div>
-                    <div className="mb-2">Alignement : {monster.alignment}</div>
-                    <div className="mb-2">Langues : {monster.languages}</div>
-                    <div className="mb-2">Classe d{'\''}armure : {
+                    <div className="mb-2">{t('type')} : {monster.type}</div>
+                    <div className="mb-2">{t('size')} : {monster.size}</div>
+                    <div className="mb-2">{t('alignment')} : {monster.alignment}</div>
+                    <div className="mb-2">{t('languages')} : {monster.languages}</div>
+                    <div className="mb-2">{t('armorClass')} : {
                       Array.isArray(monster.armor_class)
                         ? monster.armor_class.map((ac, i) => (
                             <span key={i}>{ac.type} ({ac.value}){i < (monster.armor_class as {type:string;value:number}[]).length - 1 ? ', ' : ''}</span>
                           ))
                         : monster.armor_class
                     }</div>
-                    <div className="mb-2">Points de vie : {monster.hit_points} <span className="text-xs">({monster.hit_points_roll})</span></div>
-                    <div className="mb-2">Vitesse : {
+                    <div className="mb-2">{t('hitPoints')} : {monster.hit_points} <span className="text-xs">({monster.hit_points_roll})</span></div>
+                    <div className="mb-2">{t('speed')} : {
                       monster.speed && typeof monster.speed === 'object'
                         ? Object.entries(monster.speed).map(([k, v]) => `${k}: ${v}`).join(', ')
                         : monster.speed
                     }</div>
                   </div>
                   <div className="p-3">
-                    <div className="mb-2">Force : {monster.strength}</div>
-                    <div className="mb-2">Dextérité : {monster.dexterity}</div>
-                    <div className="mb-2">Constitution : {monster.constitution}</div>
-                    <div className="mb-2">Intelligence : {monster.intelligence}</div>
-                    <div className="mb-2">Sagesse : {monster.wisdom}</div>
-                    <div className="mb-2">Charisme : {monster.charisma}</div>
-                    <div className="mb-2">XP : {monster.xp}</div>
-                    <div className="mb-2">Sens : {
+                    <div className="mb-2">{t('strength')} : {monster.strength}</div>
+                    <div className="mb-2">{t('dexterity')} : {monster.dexterity}</div>
+                    <div className="mb-2">{t('constitution')} : {monster.constitution}</div>
+                    <div className="mb-2">{t('intelligence')} : {monster.intelligence}</div>
+                    <div className="mb-2">{t('wisdom')} : {monster.wisdom}</div>
+                    <div className="mb-2">{t('charisma')} : {monster.charisma}</div>
+                    <div className="mb-2">{t('xp')} : {monster.xp}</div>
+                    <div className="mb-2">{t('senses')} : {
                       monster.senses && typeof monster.senses === 'object'
                         ? Object.entries(monster.senses).map(([k, v]) => `${k}: ${v}`).join(', ')
                         : monster.senses
                     }</div>
                     {monster.damage_immunities && monster.damage_immunities.length > 0 && (
-                      <div className="mb-2">Immunités aux dégâts : {monster.damage_immunities.join(', ')}</div>
+                      <div className="mb-2">{t('damageImmunities')} : {monster.damage_immunities.join(', ')}</div>
                     )}
                     {monster.damage_resistances && monster.damage_resistances.length > 0 && (
-                      <div className="mb-2">Résistances aux dégâts : {monster.damage_resistances.join(', ')}</div>
+                      <div className="mb-2">{t('damageResistances')} : {monster.damage_resistances.join(', ')}</div>
                     )}
                     {monster.damage_vulnerabilities && monster.damage_vulnerabilities.length > 0 && (
-                      <div className="mb-2">Vulnérabilités aux dégâts : {monster.damage_vulnerabilities.join(', ')}</div>
+                      <div className="mb-2">{t('damageVulnerabilities')} : {monster.damage_vulnerabilities.join(', ')}</div>
                     )}
                     {monster.condition_immunities && monster.condition_immunities.length > 0 && (
-                      <div className="mb-2">Immunités aux conditions : {(monster.condition_immunities as ({name?:string}|string)[]).map((ci) => typeof ci === 'string' ? ci : ci.name).join(', ')}</div>
+                      <div className="mb-2">{t('conditionImmunities')} : {(monster.condition_immunities as ({name?:string}|string)[]).map((ci) => typeof ci === 'string' ? ci : ci.name).join(', ')}</div>
                     )}
                   </div>
                 </div>
                 <div className="flex">
                   {monster.proficiencies && monster.proficiencies.length > 0 && (
                     <div className="mb-2 p-3 w-1/2 ">
-                      <b>Compétences :</b>
+                      <b>{t('skills')} :</b>
                       <ul className="list-none ml-4">
                         {monster.proficiencies.map((p, i) => (
                           <li key={i}>{typeof p.proficiency === 'string' ? p.proficiency : p.proficiency.name} (+{p.value})</li>
@@ -98,7 +101,7 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
                   )}
                   {monster.special_abilities && monster.special_abilities.length > 0 && (
                     <div className="mb-2 p-3">
-                      <b>Capacités spéciales :</b>
+                      <b>{t('specialAbilities')} :</b>
                       <ul className="list-none ml-4">
                         {monster.special_abilities.map((a, i) => (
                           <li key={i} className="relative">
@@ -110,14 +113,14 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
                                   <div>{a.desc}</div>
                                   {a.damage && a.damage.length > 0 && (
                                     <div className="mt-2">
-                                      <b>Dégâts :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}
+                                      <b>{t('damage')} :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}
                                     </div>
                                   )}
                                 </span>
                               </span>
                             )}
                             {a.damage && a.damage.length > 0 && !a.desc && (
-                              <span> <b>Dégâts :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}</span>
+                              <span> <b>{t('damage')} :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}</span>
                             )}
                           </li>
                         ))}
@@ -130,7 +133,7 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
                 <div className="flex">
                   {monster.actions && monster.actions.length > 0 && (
                     <div className="mb-2 w-1/2  p-3">
-                      <b>Actions :</b>
+                      <b>{t('actions')} :</b>
                       <ul className="list-none ml-4">
                         {monster.actions.map((a, i) => (
                           <li key={i} className="relative">
@@ -142,14 +145,14 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
                                   <div>{a.desc}</div>
                                   {a.damage && a.damage.length > 0 && (
                                     <div className="mt-2">
-                                      <b>Dégâts :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}
+                                      <b>{t('damage')} :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}
                                     </div>
                                   )}
                                 </span>
                               </span>
                             )}
                             {a.damage && a.damage.length > 0 && !a.desc && (
-                              <span> <b>Dégâts :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}</span>
+                              <span> <b>{t('damage')} :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}</span>
                             )}
                           </li>
                         ))}
@@ -158,7 +161,7 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
                   )}
                   {monster.legendary_actions && monster.legendary_actions.length > 0 && (
                     <div className="mb-2 p-3">
-                      <b>Actions légendaires :</b>
+                      <b>{t('legendaryActions')} :</b>
                       <ul className="list-none ml-4">
                         {monster.legendary_actions.map((a, i) => (
                           <li key={i} className="relative">
@@ -170,14 +173,14 @@ export default function MonsterModal({ index, onClose }: { index: string; onClos
                                   <div>{a.desc}</div>
                                   {a.damage && a.damage.length > 0 && (
                                     <div className="mt-2">
-                                      <b>Dégâts :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}
+                                      <b>{t('damage')} :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}
                                     </div>
                                   )}
                                 </span>
                               </span>
                             )}
                             {a.damage && a.damage.length > 0 && !a.desc && (
-                              <span> <b>Dégâts :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}</span>
+                              <span> <b>{t('damage')} :</b> {a.damage.map((d) => `${typeof d.damage_type === 'string' ? d.damage_type : d.damage_type?.name}: ${d.damage_dice}`).join(', ')}</span>
                             )}
                           </li>
                         ))}

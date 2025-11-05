@@ -1,11 +1,12 @@
 "use client";
 import { UploadImageProps } from "@/model/map";
 import React, { useRef, useState } from "react";
+import { useTranslations } from 'next-intl';
 import { useDispatch } from "react-redux";
 import { addMapImage } from "@/store/mapImagesSlice";
 
-
 export default function UploadImage({ onUpload }: UploadImageProps) {
+  const t = useTranslations('uploadImage');
   const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
   const [preview, setPreview] = useState<string | null>(null);
@@ -15,7 +16,7 @@ export default function UploadImage({ onUpload }: UploadImageProps) {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 1024 * 1024) { // 1 Mo
-        setError("Image trop lourde (max 1 Mo)");
+        setError(t('errorSize'));
         return;
       }
       setError(null);
@@ -36,7 +37,7 @@ export default function UploadImage({ onUpload }: UploadImageProps) {
     <div className="mb-4">
       {error && <div className="text-red-600 mb-2 text-sm">{error}</div>}
       <label htmlFor="upload-image" className="inline-block mb-2 px-4 py-2 bg-amber-700 text-white rounded cursor-pointer hover:bg-amber-800 transition-all">
-        Ajouter une carte
+        {t('addMap')}
       </label>
       <input
         id="upload-image"

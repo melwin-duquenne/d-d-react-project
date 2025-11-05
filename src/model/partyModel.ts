@@ -14,6 +14,12 @@ export interface Party {
   adventureText?: string;
 }
 
+export interface Partys {
+  _id: string;
+  name: string;
+  masterEmail: string;
+  createdAt: string | Date;
+}
 export async function createParty(name: string, masterEmail: string) {
   const client = await clientPromise;
   const db = client.db();

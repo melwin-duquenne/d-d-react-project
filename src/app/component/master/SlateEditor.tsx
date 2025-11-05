@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from 'next-intl';
 import React, { useMemo, useState } from "react";
 import { Slate, Editable, withReact, useSlateStatic, ReactEditor } from "slate-react";
 import { createEditor, Transforms, Editor, Element as SlateElement, BaseEditor, Node, Descendant, Text } from "slate";
@@ -47,8 +48,9 @@ const initialValue: Descendant[] = [
 
 // Custom monster tag element type
 
-
 export default function SlateEditor({ initialText = "", partyId, insertMonsterName, onMonsterInserted }: SlateEditorProps) {
+
+  const t = useTranslations('slateEditor');
   const editor = useMemo(() => {
     const e = withReact(createEditor());
     // Declare monster-tag as inline and void for Slate
@@ -216,7 +218,7 @@ export default function SlateEditor({ initialText = "", partyId, insertMonsterNa
             onClick={handleSave}
             disabled={saving}
           >
-            {saving ? "Enregistrement..." : "Enregistrer"}
+            {saving ? t('saving') : t('save')}
           </button>
         </div>
         <Editable

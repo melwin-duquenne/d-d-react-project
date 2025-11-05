@@ -5,11 +5,13 @@ import { RootState } from "@/store";
 import Image from "next/image";
 import UploadImage from "../upload/UploadImage";
 import SelectImage from "../upload/SelectImage";
+
+import { useTranslations } from 'next-intl';
 import { Pawn } from "@/model/map";
 
 
-
 export default function MapBoard() {
+  const t = useTranslations('mapBoard');
   const [zoom, setZoom] = useState(1);
   function handleZoomIn() {
     setZoom(z => Math.min(z + 0.2, 3));
@@ -79,7 +81,7 @@ export default function MapBoard() {
       <form className="flex gap-2 items-center my-4" onSubmit={handleAddPawn}>
         <input
           type="text"
-          placeholder="Nom du joeur"
+          placeholder={t('playerNamePlaceholder')}
           value={newPawn.label}
           onChange={e => setNewPawn({ ...newPawn, label: e.target.value })}
           className="border rounded px-2 py-1 text-sm"
@@ -90,7 +92,7 @@ export default function MapBoard() {
           onChange={e => setNewPawn({ ...newPawn, color: e.target.value })}
           className="w-8 h-8 border rounded"
         />
-        <button type="submit" className="bg-amber-700 text-white px-3 py-1 rounded text-sm">Ajouter joueur</button>
+        <button type="submit" className="bg-amber-700 text-white px-3 py-1 rounded text-sm">{t('addPlayer')}</button>
       </form>
       <div
         className="relative w-full h-[800px] border rounded-lg overflow-hidden"
@@ -193,13 +195,13 @@ export default function MapBoard() {
             <button
               onClick={e => { e.stopPropagation(); handleDeletePawn(pawn.id); }}
               className="absolute -top-2 -right-2 bg-red-500 text-xs text-white rounded-full w-5 h-5 flex items-center justify-center"
-              title="Supprimer"
+              title={t('delete')}
               style={{ zIndex: 20 }}
             >×</button>
           </div>
         ))}
         <div className="absolute top-2 left-2 flex items-center z-30 gap-2 text-black bg-white bg-opacity-80 px-2 py-1 rounded shadow text-xs">
-          <span>Carte interactive</span>
+          <span>{t('interactiveMap')}</span>
           <button onClick={handleZoomOut} className="px-2 py-1 bg-gray-200 rounded">-</button>
           <span className="px-2">{(zoom * 100).toFixed(0)}%</span>
           <button onClick={handleZoomIn} className="px-2 py-1 bg-gray-200 rounded">+</button>

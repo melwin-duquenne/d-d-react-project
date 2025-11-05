@@ -27,7 +27,7 @@ export default NextAuth({
     secret: process.env.NEXTAUTH_SECRET, // à personnaliser en prod
   },
   pages: {
-    signIn: "/login", // Redirige vers ta page custom
+    signIn: "fr/login", // Redirige vers ta page custom
   },
   callbacks: {
     async session({ session, token }) {

@@ -1,6 +1,6 @@
 describe('Authentification - La Taverne du Héros', () => {
   it('connexion avec email et mot de passe valides', () => {
-  cy.visit('/login');
+  cy.visit('/fr/login');
   cy.get('input[type=email]').type(Cypress.env('ENV_MAIL_TEST'));
   cy.get('input[type=password]').first().type(Cypress.env('ENV_MDP_TEST'));
   cy.get('#validate').click();
@@ -9,7 +9,7 @@ describe('Authentification - La Taverne du Héros', () => {
   });
 
   it('déconnexion après connexion', () => {
-    cy.visit('/login');
+    cy.visit('/fr/login');
     cy.get('input[type=email]').type(Cypress.env('ENV_MAIL_TEST'));
     cy.get('input[type=password]').first().type(Cypress.env('ENV_MDP_TEST'));
     cy.get('#validate').click();

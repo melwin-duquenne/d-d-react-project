@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import PlayerCardView from "./PlayerCardView";
+import { useTranslations } from 'next-intl';
 
 interface PlayerCardListItem {
   _id: string;
@@ -20,6 +21,7 @@ interface PlayerCardListItem {
 }
 
 export default function ListPlayerCard({ partyId, isOwner }: ListPlayerCardProps) {
+  const t = useTranslations('listPlayerCard');
   const [players, setPlayers] = useState<PlayerCardListItem[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -42,7 +44,7 @@ export default function ListPlayerCard({ partyId, isOwner }: ListPlayerCardProps
             onClick={() => setSelected(player.name)}
           >
             <Image src="/list.webp" alt="player" width={80} height={80} className="mb-2" />
-            <span className="font-semibold text-lg text-center break-words">{player.name} lv:{player.level}</span>
+            <span className="font-semibold text-lg text-center break-words">{player.name} {t('levelShort')}:{player.level}</span>
           </div>
         ))}
       </div>

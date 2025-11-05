@@ -1,0 +1,176 @@
+{
+  "welcome": "Bienvenue, aventurier !",
+  "startAdventure": "Débutez votre aventure",
+  "parties": "Mes parties",
+  "createParty": "Créer une partie",
+  "home": {
+    "title": "La Taverne du Héros",
+    "intro1": "Bienvenue, aventurier !",
+    "intro2": "Ici, les récits prennent vie et les quêtes s’écrivent à l’encre du destin.",
+    "intro3": "La Taverne du Héros est ton alliée pour forger des scénarios épiques et gérer ton bestiaire avec aisance.",
+    "intro4": "Que tu sois Game Master ou joueur, ce lieu te guidera dans la création de mondes, de monstres et de légendes.",
+    "feature1": "Authentifie-toi en tant que Maître du Jeu ou Aventurier.",
+    "feature2": "Crée et organise ton scénario avec un éditeur narratif.",
+    "feature3": "Consulte un bestiaire complet issu de l’API D&D 5e.",
+    "feature4": "Crée et gère les personnages de tes joueurs.",
+    "cta": "Débutez votre aventure"
+  },
+  "partyList": {
+    "title": "Mes parties",
+    "inputPlaceholder": "Nom de la partie",
+    "create": "Créer",
+    "errorLoading": "Erreur lors du chargement des parties",
+    "nameRequired": "Nom de partie requis",
+    "errorCreate": "Erreur lors de la création",
+    "errorDelete": "Erreur lors de la suppression",
+    "loading": "Chargement...",
+    "access": "Accéder",
+    "delete": "Supprimer"
+  },
+  "nav": {
+    "title": "La Taverne du Héros",
+    "parties": "Parties",
+    "about": "à propos",
+    "logout": "Se déconnecter",
+    "login": "Se connecter"
+  },
+  "about": {
+    "title": "À propos",
+    "p1": "Ce projet a été réalisé dans le cadre d’un travail scolaire. Son objectif principal est de mettre en pratique les compétences que j’ai acquises, d’explorer de nouvelles connaissances et de me perfectionner dans leur application.",
+    "p2": "Il ne s’agit pas d’un projet à but entrepreneurial ou commercial. Il a uniquement pour vocation de servir de support d’apprentissage, d’expérimentation et de démonstration de mes capacités techniques et créatives.",
+    "p3": "En développant ce projet, je souhaite progresser, tester mes compétences dans un contexte concret et partager le résultat de mon travail.",
+    "thanks": "Merci de votre visite et de votre intérêt !"
+  },
+  "login": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "loginButton": "Se connecter",
+    "registerButton": "S'inscrire",
+    "noAccount": "Pas de compte ? S'inscrire",
+    "alreadyAccount": "Déjà inscrit ? Se connecter",
+    "successLogin": "Connexion réussie !",
+    "successRegister": "Inscription réussie ! Connexion en cours...",
+    "errorRequired": "Email et mot de passe requis",
+    "errorPasswordMatch": "Les mots de passe ne correspondent pas",
+    "errorRegister": "Erreur lors de l'inscription",
+    "errorServer": "Erreur serveur",
+    "connected": "Vous êtes connecté !"
+  },
+  "ability": {
+    "title": "Scores de Caractéristiques",
+    "strength": "FOR",
+    "dexterity": "DEX",
+    "constitution": "CON",
+    "intelligence": "INT",
+    "wisdom": "SAG",
+    "charisma": "CHA"
+  },
+  "equipment": {
+    "title": "Équipement & Objets magiques",
+    "add": "Ajouter...",
+    "magicSuffix": " (Magique)",
+    "remove": "Retirer"
+  },
+  "history": {
+    "title": "Histoire",
+    "placeholder": "Racontez l'histoire du personnage..."
+  },
+  "languageSelect": {
+    "label": "Langues"
+  },
+  "level": {
+    "title": "Niveau & Progression XP",
+    "current": "Niveau actuel :",
+    "xp": "XP :",
+    "toNext": "/ {nextLevelXp} (pour niveau {nextLevel})",
+    "progress": "Progression vers le niveau {nextLevel}: {percent}%"
+  },
+  "listPlayerCard": {
+    "levelShort": "nv"
+  },
+  "nameText": {
+    "label": "Nom :"
+  },
+  "playerCardView": {
+    "loading": "Chargement...",
+    "edit": "Éditer",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer ce personnage ?",
+    "deleteSuccess": "Personnage supprimé avec succès !",
+    "deleteError": "Erreur lors de la suppression",
+    "race": "Race",
+    "class": "Classe",
+    "level": "Niveau",
+    "xp": "XP",
+    "characteristics": "Caractéristiques",
+    "languages": "Langues",
+    "skills": "Compétences",
+    "spells": "Sorts",
+    "equipment": "Équipement",
+    "magicItems": "Objets magiques",
+    "history": "Histoire"
+  },
+  "raceSelect": {
+    "label": "Races"
+  },
+  "spellListSelect": {
+    "label": "Sorts"
+  },
+  "playerCard": {
+    "title": "Fiche Joueur",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "requiredFields": "les champs nom, race, class, langue et l'histoire sont obligatoires.",
+    "saveSuccess": "Fiche joueur enregistrée !",
+    "saveError": "Erreur lors de l'enregistrement"
+  },
+  "mapBoard": {
+    "addPlayer": "Ajouter joueur",
+    "playerNamePlaceholder": "Nom du joeur",
+    "delete": "Supprimer",
+    "interactiveMap": "Carte interactive"
+  },
+  "monsterModal": {
+    "loading": "Chargement...",
+    "error": "Erreur lors du chargement de la fiche.",
+    "challenge": "Niveau de difficulté",
+    "type": "Type",
+    "size": "Taille",
+    "alignment": "Alignement",
+    "languages": "Langues",
+    "armorClass": "Classe d'armure",
+    "hitPoints": "Points de vie",
+    "speed": "Vitesse",
+    "strength": "Force",
+    "dexterity": "Dextérité",
+    "constitution": "Constitution",
+    "intelligence": "Intelligence",
+    "wisdom": "Sagesse",
+    "charisma": "Charisme",
+    "xp": "XP",
+    "senses": "Sens",
+    "damageImmunities": "Immunités aux dégâts",
+    "damageResistances": "Résistances aux dégâts",
+    "damageVulnerabilities": "Vulnérabilités aux dégâts",
+    "conditionImmunities": "Immunités aux conditions",
+    "skills": "Compétences",
+    "specialAbilities": "Capacités spéciales",
+    "damage": "Dégâts",
+    "actions": "Actions",
+    "legendaryActions": "Actions légendaires"
+  },
+  "selectImage": {
+    "label": "Choisir une carte :"
+  },
+  "uploadImage": {
+    "addMap": "Ajouter une carte",
+    "errorSize": "Image trop lourde (max 1 Mo)"
+  },
+  "slateEditor": {
+    "saving": "Enregistrement...",
+    "save": "Enregistrer"
+  }
+}
