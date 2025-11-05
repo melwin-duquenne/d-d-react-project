@@ -1,3 +1,8 @@
+export async function deleteParty(id: string) {
+  const client = await clientPromise;
+  const db = client.db();
+  return db.collection("parties").deleteOne({ _id: new ObjectId(id) });
+}
 import clientPromise from "../lib/db/mongodb";
 import { ObjectId } from "mongodb";
 

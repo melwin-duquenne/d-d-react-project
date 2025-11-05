@@ -150,6 +150,7 @@ export default function AuthCard() {
             )}
             <button
               type="submit"
+              id="validate"
               className="bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 rounded-xl shadow-lg transition-all duration-200 hover:scale-105"
               disabled={!!session} // désactive le bouton si déjà connecté
             >

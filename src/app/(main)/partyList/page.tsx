@@ -59,6 +59,23 @@ export default function PartyListPage() {
     setLoading(false);
   }
 
+  async function handleDeleteParty(id: string) {
+    setLoading(true);
+    setError("");
+    const res = await fetch(`/api/party`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, masterEmail }),
+    });
+    if (res.ok) {
+      setParties(parties.filter(p => p._id !== id));
+    } else {
+      const data = await res.json();
+      setError(data.error || "Erreur lors de la suppression");
+    }
+    setLoading(false);
+  }
+
   return (
     <div className="max-w-2xl mx-auto py-12 h-screen">
       <h1 className="text-3xl font-bold mb-8 text-center">Mes parties</h1>
@@ -80,7 +97,16 @@ export default function PartyListPage() {
         {parties.map((party) => (
           <li key={party._id} className="border p-4 rounded flex justify-between items-center">
             <span className="font-semibold">{party.name}</span>
-            <Link href={`/master/${party._id}`} className="bg-amber-700 text-white px-4 py-2 rounded">Accéder</Link>
+            <div className="flex gap-2">
+              <Link href={`/master/${party._id}`} className="bg-amber-700 text-white px-4 py-2 rounded">Accéder</Link>
+              <button
+                onClick={() => handleDeleteParty(party._id)}
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+                disabled={loading}
+              >
+                Supprimer
+              </button>
+            </div>
           </li>
         ))}
       </ul>

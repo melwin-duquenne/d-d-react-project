@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createParty, getPartiesByMaster, getPartyById, updateAdventureText } from "@/model/partyModel";
+import { createParty, getPartiesByMaster, getPartyById, updateAdventureText, deleteParty } from "@/model/partyModel";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
@@ -35,6 +35,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(403).json({ error: "Accès interdit" });
     }
     return res.status(200).json({ success: true, party });
+  }
+
+  if (req.method === "DELETE") {
+    // Supprimer une party (seulement par le master)
+    const { id, masterEmail } = req.body;
+    if (!id || !masterEmail) return res.status(400).json({ error: "ID et email requis" });
+    // Vérification ownership (optionnel, mais recommandé)
+    const party = await getPartyById(id);
+    if (!party) return res.status(404).json({ error: "Partie non trouvée" });
+    if (party.masterEmail !== masterEmail) return res.status(403).json({ error: "Accès interdit" });
+    await deleteParty(id);
+    return res.status(200).json({ success: true });
   }
 
   if (req.method === "PATCH") {
